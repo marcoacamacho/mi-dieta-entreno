@@ -567,6 +567,13 @@ export const WORKOUT_PLAN: WorkoutDay[] = [
   },
 ];
 
+// Índice plano id → {nombre, emoji} de todos los ejercicios del plan, para
+// poder identificarlos en el histórico de registros sin importar qué día
+// de la semana era cuando se registraron.
+export const EXERCISE_INDEX: Record<string, { nombre: string; emoji: string }> = Object.fromEntries(
+  WORKOUT_PLAN.flatMap((dia) => dia.ejercicios.map((ej) => [ej.id, { nombre: ej.nombre, emoji: ej.emoji }]))
+);
+
 export const SHOPPING_CATEGORIES = [
   "Proteínas",
   "Lácteos",

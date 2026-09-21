@@ -7,15 +7,17 @@ import { MEAL_PLAN, WORKOUT_PLAN } from "./planData";
 import { todayISO, dayOfWeekKey } from "./dateUtils";
 import { calcularObjetivos, DEFAULT_PROFILE } from "./calc";
 import HoyTab from "./tabs/HoyTab";
+import ProgresoTab from "./tabs/ProgresoTab";
 import CompraTab from "./tabs/CompraTab";
 import RecetasTab from "./tabs/RecetasTab";
 import SuplementosTab from "./tabs/SuplementosTab";
 import PerfilTab from "./tabs/PerfilTab";
 
-type TabKey = "hoy" | "compra" | "recetas" | "suplementos" | "perfil";
+type TabKey = "hoy" | "progreso" | "compra" | "recetas" | "suplementos" | "perfil";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "hoy", label: "Hoy" },
+  { key: "progreso", label: "Progreso" },
   { key: "compra", label: "Compra" },
   { key: "recetas", label: "Recetas" },
   { key: "suplementos", label: "Suplementos" },
@@ -112,6 +114,7 @@ export default function DietaApp() {
           diaPesaje={profile.diaPesaje}
         />
       )}
+      {tab === "progreso" && <ProgresoTab logs={logs} profile={profile} targets={targets} />}
       {tab === "compra" && (
         <CompraTab
           checked={shoppingChecked}
