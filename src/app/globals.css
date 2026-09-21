@@ -122,19 +122,6 @@ body {
   animation: bounceSlow 2.4s ease-in-out infinite;
 }
 
-@keyframes spin3d {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-.animate-spin-3d {
-  animation: spin3d 7s linear infinite;
-}
-
 @keyframes confettiFall {
   0% {
     transform: translateY(-10px) rotate(0deg);
@@ -162,8 +149,7 @@ body {
   .animate-fade-in-up,
   .animate-pop,
   .animate-bounce-slow,
-  .animate-confetti-fall,
-  .animate-spin-3d {
+  .animate-confetti-fall {
     animation: none !important;
   }
   * {
