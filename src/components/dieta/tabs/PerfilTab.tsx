@@ -14,6 +14,7 @@ import {
 import { Profile, DailyLog, DAY_KEYS, DAY_LABELS } from "../types";
 import { Targets } from "../calc";
 import { Card, SectionTitle } from "../ui";
+import { RotatingFigure } from "../RotatingFigure";
 
 interface Props {
   profile: Profile;
@@ -40,6 +41,10 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
 
   return (
     <div className="space-y-5">
+      <div className="py-2">
+        <RotatingFigure />
+      </div>
+
       <Card>
         <SectionTitle>Tu perfil</SectionTitle>
         <div className="grid grid-cols-2 gap-3">
