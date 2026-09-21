@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { ShoppingItem } from "../types";
-import { SHOPPING_CATEGORIES, BASE_SHOPPING_LIST } from "../planData";
-import { Card, SectionTitle } from "../ui";
+import { SHOPPING_CATEGORIES, BASE_SHOPPING_LIST, CATEGORY_EMOJI } from "../planData";
+import { Card, SectionTitle, ProgressBar } from "../ui";
 
 interface Props {
   checked: Record<string, boolean>;
@@ -87,19 +87,25 @@ export default function CompraTab({ checked, setChecked, custom, setCustom }: Pr
         </div>
       </Card>
 
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-slate-500">{totalMarcados} de {items.length} ya en el carro / en casa</span>
-        <button onClick={resetChecks} className="text-xs text-indigo-300 hover:text-indigo-200">
-          Desmarcar todo (nueva semana)
-        </button>
-      </div>
+      <Card>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-slate-400">🛒 {totalMarcados} de {items.length} ya en el carro / en casa</span>
+          <button onClick={resetChecks} className="text-xs text-indigo-300 hover:text-indigo-200">
+            Desmarcar todo (nueva semana)
+          </button>
+        </div>
+        <ProgressBar value={totalMarcados} max={items.length} colorClass="bg-emerald-500" />
+      </Card>
 
       {SHOPPING_CATEGORIES.map((cat) => {
         const catItems = porCategoria.get(cat) ?? [];
         if (catItems.length === 0) return null;
         return (
           <Card key={cat}>
-            <SectionTitle>{cat}</SectionTitle>
+            <SectionTitle>
+              <span className="mr-1.5">{CATEGORY_EMOJI[cat]}</span>
+              {cat}
+            </SectionTitle>
             <ul className="space-y-1.5">
               {catItems.map((it) => (
                 <li key={it.id} className="flex items-center gap-3">

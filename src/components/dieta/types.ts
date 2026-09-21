@@ -27,12 +27,15 @@ export const DAY_LABELS: Record<DayKey, string> = {
   domingo: "Domingo",
 };
 
+export type Momento = "desayuno" | "media_manana" | "comida" | "merienda" | "cena" | "libre";
+
 export interface MealItem {
   id: string;
   nombre: string;
   kcal: number;
   proteina: number;
   ingredientes: string[];
+  momento: Momento;
 }
 
 export interface DayPlan {
@@ -46,6 +49,8 @@ export interface Exercise {
   id: string;
   nombre: string;
   pauta: string;
+  emoji: string;
+  comoHacerlo: string;
 }
 
 export interface WorkoutDay {
@@ -86,6 +91,7 @@ export interface Profile {
   edad: number;
   peso: number;
   altura: number;
+  pesoObjetivo: number;
   actividad: "sedentario" | "ligero" | "moderado" | "activo" | "muy_activo";
   objetivo: "definir" | "mantener" | "recomposicion";
 }

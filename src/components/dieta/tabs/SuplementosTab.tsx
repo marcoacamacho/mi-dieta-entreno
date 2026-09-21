@@ -10,7 +10,10 @@ export default function SuplementosTab() {
       </p>
       {SUPLEMENTOS.map((s) => (
         <Card key={s.id}>
-          <SectionTitle>{s.nombre}</SectionTitle>
+          <SectionTitle>
+            <span className="mr-1.5">{s.emoji}</span>
+            {s.nombre}
+          </SectionTitle>
           <div className="space-y-2 text-sm text-slate-300 mb-3">
             <p><span className="text-slate-500">Para qué sirve: </span>{s.paraQue}</p>
             <p><span className="text-slate-500">Dosis: </span>{s.dosis}</p>

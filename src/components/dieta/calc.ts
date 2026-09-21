@@ -43,6 +43,7 @@ export const DEFAULT_PROFILE: Profile = {
   edad: 30,
   peso: 80,
   altura: 175,
+  pesoObjetivo: 75,
   actividad: "moderado",
   objetivo: "definir",
 };

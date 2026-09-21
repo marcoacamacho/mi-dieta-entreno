@@ -4,7 +4,23 @@ import { useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood } from "../types";
 import { formatDisplayDate, addDays } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge } from "../ui";
+import { MOMENTO_INFO } from "../planData";
 import { Targets } from "../calc";
+
+const HERO_STYLES = {
+  entreno: {
+    gradient: "from-indigo-500/25 via-violet-500/15 to-transparent",
+    frase: "💪 Día de entreno — dale caña y llega fuerte a cada serie.",
+  },
+  descanso: {
+    gradient: "from-emerald-500/15 via-teal-500/10 to-transparent",
+    frase: "🌿 Descanso de entreno — el músculo también crece cuando recuperas.",
+  },
+  libre: {
+    gradient: "from-amber-500/20 via-pink-500/15 to-transparent",
+    frase: "🎉 Día libre de dieta — disfruta sin culpa, mañana seguimos.",
+  },
+};
 
 interface Props {
   date: string;
@@ -73,35 +89,41 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
     }));
   }
 
+  const tipoDia = dayPlan.diaLibreDieta ? "libre" : dayPlan.entreno ? "entreno" : "descanso";
+  const hero = HERO_STYLES[tipoDia];
+
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-3">
-        <button
-          onClick={() => setDate(addDays(date, -1))}
-          className="rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
-        >
-          ← Ayer
-        </button>
-        <div className="flex flex-col items-center">
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="bg-transparent text-center text-sm text-slate-300 outline-none"
-          />
-          <span className="text-base font-semibold text-white">{formatDisplayDate(date)}</span>
-          <div className="mt-1 flex gap-2">
-            {dayPlan.entreno && <Badge tone="indigo">Día de entreno</Badge>}
-            {!dayPlan.entreno && !dayPlan.diaLibreDieta && <Badge tone="slate">Descanso de entreno</Badge>}
-            {dayPlan.diaLibreDieta && <Badge tone="amber">Día libre de dieta</Badge>}
+      <div className={`rounded-2xl bg-gradient-to-br ${hero.gradient} p-4`}>
+        <div className="flex items-center justify-between gap-3">
+          <button
+            onClick={() => setDate(addDays(date, -1))}
+            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 hover:bg-white/10"
+          >
+            ← Ayer
+          </button>
+          <div className="flex flex-col items-center">
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="bg-transparent text-center text-sm text-slate-300 outline-none"
+            />
+            <span className="text-base font-semibold text-white">{formatDisplayDate(date)}</span>
+            <div className="mt-1 flex gap-2">
+              {dayPlan.entreno && <Badge tone="indigo">Día de entreno</Badge>}
+              {!dayPlan.entreno && !dayPlan.diaLibreDieta && <Badge tone="slate">Descanso de entreno</Badge>}
+              {dayPlan.diaLibreDieta && <Badge tone="amber">Día libre de dieta</Badge>}
+            </div>
           </div>
+          <button
+            onClick={() => setDate(addDays(date, 1))}
+            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 hover:bg-white/10"
+          >
+            Mañana →
+          </button>
         </div>
-        <button
-          onClick={() => setDate(addDays(date, 1))}
-          className="rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300 hover:bg-white/5"
-        >
-          Mañana →
-        </button>
+        <p className="mt-3 text-center text-sm text-slate-200">{hero.frase}</p>
       </div>
 
       <Card>
@@ -140,6 +162,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
         <ul className="space-y-2">
           {dayPlan.meals.map((meal) => {
             const done = log.comidosIds.includes(meal.id);
+            const info = MOMENTO_INFO[meal.momento];
             return (
               <li
                 key={meal.id}
@@ -147,6 +170,9 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                   done ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/10 bg-white/[0.02]"
                 }`}
               >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-lg">
+                  {info.emoji}
+                </span>
                 <input
                   type="checkbox"
                   checked={done}
@@ -154,6 +180,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                   className="h-4 w-4 shrink-0 accent-emerald-500"
                 />
                 <div className="min-w-0 flex-1">
+                  <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">{info.label}</div>
                   <div className="text-sm text-slate-200">{meal.nombre}</div>
                   {meal.kcal > 0 && (
                     <div className="text-xs text-slate-500">
@@ -219,9 +246,17 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
               const entry = log.ejercicios[ex.id] ?? {};
               return (
                 <li key={ex.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5">
-                  <div className="text-sm text-slate-200">{ex.nombre}</div>
-                  <div className="text-xs text-slate-500 mb-2">{ex.pauta}</div>
-                  <div className="flex gap-2">
+                  <div className="flex items-start gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-lg">
+                      {ex.emoji}
+                    </span>
+                    <div className="min-w-0">
+                      <div className="text-sm text-slate-200">{ex.nombre}</div>
+                      <div className="text-xs text-slate-500">{ex.pauta}</div>
+                      <div className="mt-1 text-xs italic text-slate-500">{ex.comoHacerlo}</div>
+                    </div>
+                  </div>
+                  <div className="mt-2.5 flex gap-2">
                     <input
                       type="number"
                       step="0.5"

@@ -7,6 +7,7 @@ export interface TiendaLink {
 export interface Suplemento {
   id: string;
   nombre: string;
+  emoji: string;
   paraQue: string;
   dosis: string;
   comoTomarla: string;
@@ -20,6 +21,7 @@ export const SUPLEMENTOS: Suplemento[] = [
   {
     id: "whey",
     nombre: "Proteína whey (suero)",
+    emoji: "🥤",
     paraQue:
       "Completar la proteína diaria de forma rápida y barata cuando no llegas con comida real (media mañana, merienda o post-entreno).",
     dosis: "1 medida (25-30 g) por toma, 1-2 tomas al día según cuánto te falte para tu objetivo de proteína.",
@@ -35,6 +37,7 @@ export const SUPLEMENTOS: Suplemento[] = [
   {
     id: "creatina",
     nombre: "Creatina monohidrato",
+    emoji: "⚡",
     paraQue:
       "Mejora la fuerza y el rendimiento en series de pocas repeticiones; ayuda a mantener masa muscular en déficit calórico. Es el suplemento con más evidencia científica junto a la proteína.",
     dosis: "3-5 g al día, todos los días (también los días de descanso). No hace falta fase de carga.",
@@ -50,6 +53,7 @@ export const SUPLEMENTOS: Suplemento[] = [
   {
     id: "beta-alanina",
     nombre: "Beta-alanina",
+    emoji: "🔥",
     paraQue:
       "Retrasa la fatiga muscular en esfuerzos de 1-4 minutos (series largas, circuitos, HIIT), útil para los entrenos de piernas y el circuito metabólico del viernes.",
     dosis: "3.2-6.4 g al día, repartidos en 2-3 tomas para reducir el hormigueo (parestesia) en la piel, que es normal e inofensivo.",

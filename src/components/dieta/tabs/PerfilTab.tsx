@@ -5,6 +5,7 @@ import {
   Line,
   LineChart,
   CartesianGrid,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -28,6 +29,10 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
       .map(([fecha, log]) => ({ fecha: fecha.slice(5), peso: log.pesoCorporal as number }))
       .sort((a, b) => a.fecha.localeCompare(b.fecha));
   }, [logs]);
+
+  const pesoActual = pesoData.length > 0 ? pesoData[pesoData.length - 1].peso : profile.peso;
+  const diferencia = pesoActual - profile.pesoObjetivo;
+  const yaConseguido = Math.abs(diferencia) < 0.1;
 
   function set<K extends keyof Profile>(key: K, value: Profile[K]) {
     setProfile((prev) => ({ ...prev, [key]: value }));
@@ -74,6 +79,16 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
               type="number"
               value={profile.altura}
               onChange={(e) => set("altura", Number(e.target.value))}
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            />
+          </label>
+          <label className="text-xs text-slate-400 col-span-2">
+            🎯 Peso que quiero conseguir (kg)
+            <input
+              type="number"
+              step="0.1"
+              value={profile.pesoObjetivo}
+              onChange={(e) => set("pesoObjetivo", Number(e.target.value))}
               className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
             />
           </label>
@@ -132,6 +147,26 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
         </p>
       </Card>
 
+      <Card className="bg-gradient-to-br from-indigo-500/15 via-violet-500/10 to-transparent">
+        <SectionTitle>🎯 Tu objetivo de peso</SectionTitle>
+        <div className="grid grid-cols-3 gap-3 text-center">
+          <div>
+            <div className="text-xl font-bold text-white">{pesoActual}</div>
+            <div className="text-xs text-slate-500">actual (kg)</div>
+          </div>
+          <div>
+            <div className="text-xl font-bold text-indigo-300">{profile.pesoObjetivo}</div>
+            <div className="text-xs text-slate-500">objetivo (kg)</div>
+          </div>
+          <div>
+            <div className="text-xl font-bold text-emerald-400">
+              {yaConseguido ? "🎉" : `${diferencia > 0 ? "-" : "+"}${Math.abs(diferencia).toFixed(1)}`}
+            </div>
+            <div className="text-xs text-slate-500">{yaConseguido ? "¡conseguido!" : "kg para llegar"}</div>
+          </div>
+        </div>
+      </Card>
+
       <Card>
         <SectionTitle>Evolución de tu peso corporal</SectionTitle>
         {pesoData.length < 2 ? (
@@ -159,6 +194,12 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
                 }}
                 labelStyle={{ color: "#e4e4e7" }}
                 itemStyle={{ color: "#e4e4e7" }}
+              />
+              <ReferenceLine
+                y={profile.pesoObjetivo}
+                stroke="#34d399"
+                strokeDasharray="4 4"
+                label={{ value: "🎯 objetivo", position: "insideTopRight", fill: "#34d399", fontSize: 11 }}
               />
               <Line type="monotone" dataKey="peso" stroke="#a5b4fc" strokeWidth={2.5} dot={{ r: 3, fill: "#818cf8" }} />
             </LineChart>

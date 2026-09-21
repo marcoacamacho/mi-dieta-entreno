@@ -1,8 +1,17 @@
-import { DayPlan, WorkoutDay, ShoppingItem } from "./types";
+import { DayPlan, WorkoutDay, ShoppingItem, Momento } from "./types";
 
 // Plan orientativo ~2150-2250 kcal / ~180-190 g proteína al día (referencia
 // para una persona activa en fase de definición, aprox. 80-90 kg). Ajusta
 // raciones al alza o a la baja según el objetivo calculado en "Perfil".
+
+export const MOMENTO_INFO: Record<Momento, { label: string; emoji: string }> = {
+  desayuno: { label: "Desayuno", emoji: "🍳" },
+  media_manana: { label: "Media mañana", emoji: "🥤" },
+  comida: { label: "Comida", emoji: "🍗" },
+  merienda: { label: "Merienda", emoji: "🍓" },
+  cena: { label: "Cena", emoji: "🌙" },
+  libre: { label: "Libre", emoji: "🎉" },
+};
 
 export const MEAL_PLAN: DayPlan[] = [
   {
@@ -16,6 +25,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 420,
         proteina: 38,
         ingredientes: ["huevos", "claras de huevo pasteurizadas", "espinacas", "avena", "canela"],
+        momento: "desayuno",
       },
       {
         id: "lun-media",
@@ -23,6 +33,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 280,
         proteina: 33,
         ingredientes: ["proteína whey", "leche desnatada", "plátano"],
+        momento: "media_manana",
       },
       {
         id: "lun-comida",
@@ -30,6 +41,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 650,
         proteina: 55,
         ingredientes: ["pechuga de pollo", "arroz integral", "brócoli", "aceite de oliva"],
+        momento: "comida",
       },
       {
         id: "lun-merienda",
@@ -37,6 +49,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 250,
         proteina: 20,
         ingredientes: ["yogur griego 0%", "nueces", "miel"],
+        momento: "merienda",
       },
       {
         id: "lun-cena",
@@ -44,6 +57,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 550,
         proteina: 40,
         ingredientes: ["salmón", "boniato", "lechuga", "tomate"],
+        momento: "cena",
       },
     ],
   },
@@ -58,6 +72,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 430,
         proteina: 36,
         ingredientes: ["avena", "proteína whey", "arándanos", "almendras"],
+        momento: "desayuno",
       },
       {
         id: "mar-media",
@@ -65,6 +80,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 260,
         proteina: 18,
         ingredientes: ["huevos", "manzana"],
+        momento: "media_manana",
       },
       {
         id: "mar-comida",
@@ -72,6 +88,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 640,
         proteina: 52,
         ingredientes: ["ternera magra", "quinoa", "pimiento", "cebolla", "aceite de oliva"],
+        momento: "comida",
       },
       {
         id: "mar-merienda",
@@ -79,6 +96,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 300,
         proteina: 32,
         ingredientes: ["proteína whey", "leche de almendras", "crema de cacahuete"],
+        momento: "merienda",
       },
       {
         id: "mar-cena",
@@ -86,6 +104,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 480,
         proteina: 48,
         ingredientes: ["claras de huevo pasteurizadas", "atún al natural", "espárragos", "pan integral"],
+        momento: "cena",
       },
     ],
   },
@@ -100,6 +119,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 380,
         proteina: 30,
         ingredientes: ["skyr o queso batido 0%", "muesli sin azúcar", "fresas"],
+        momento: "desayuno",
       },
       {
         id: "mie-media",
@@ -107,6 +127,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 300,
         proteina: 30,
         ingredientes: ["proteína whey", "leche desnatada", "almendras"],
+        momento: "media_manana",
       },
       {
         id: "mie-comida",
@@ -114,6 +135,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 560,
         proteina: 45,
         ingredientes: ["merluza", "patata", "judías verdes", "aceite de oliva"],
+        momento: "comida",
       },
       {
         id: "mie-merienda",
@@ -121,6 +143,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 220,
         proteina: 22,
         ingredientes: ["requesón", "canela", "nueces"],
+        momento: "merienda",
       },
       {
         id: "mie-cena",
@@ -128,6 +151,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 460,
         proteina: 42,
         ingredientes: ["pechuga de pavo", "calabacín", "cebolla", "lechuga", "tomate"],
+        momento: "cena",
       },
     ],
   },
@@ -142,6 +166,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 440,
         proteina: 32,
         ingredientes: ["huevos", "claras de huevo pasteurizadas", "aguacate", "pan integral"],
+        momento: "desayuno",
       },
       {
         id: "jue-media",
@@ -149,6 +174,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 280,
         proteina: 33,
         ingredientes: ["proteína whey", "leche desnatada", "plátano"],
+        momento: "media_manana",
       },
       {
         id: "jue-comida",
@@ -156,6 +182,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 660,
         proteina: 54,
         ingredientes: ["pechuga de pollo", "arroz basmati", "pimiento", "cebolla", "curry"],
+        momento: "comida",
       },
       {
         id: "jue-merienda",
@@ -163,6 +190,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 260,
         proteina: 28,
         ingredientes: ["yogur griego 0%", "proteína whey", "canela"],
+        momento: "merienda",
       },
       {
         id: "jue-cena",
@@ -170,6 +198,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 520,
         proteina: 46,
         ingredientes: ["solomillo de cerdo", "coliflor", "aceite de oliva"],
+        momento: "cena",
       },
     ],
   },
@@ -184,6 +213,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 430,
         proteina: 36,
         ingredientes: ["avena", "proteína whey", "cacao puro", "plátano"],
+        momento: "desayuno",
       },
       {
         id: "vie-media",
@@ -191,6 +221,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 220,
         proteina: 16,
         ingredientes: ["huevos", "tomate"],
+        momento: "media_manana",
       },
       {
         id: "vie-comida",
@@ -198,6 +229,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 640,
         proteina: 48,
         ingredientes: ["salmón", "arroz integral", "espárragos"],
+        momento: "comida",
       },
       {
         id: "vie-merienda",
@@ -205,6 +237,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 260,
         proteina: 32,
         ingredientes: ["proteína whey", "leche desnatada"],
+        momento: "merienda",
       },
       {
         id: "vie-cena",
@@ -212,6 +245,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 540,
         proteina: 46,
         ingredientes: ["pechuga de pollo", "garbanzos cocidos", "lechuga", "tomate", "aceite de oliva"],
+        momento: "cena",
       },
     ],
   },
@@ -226,6 +260,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 460,
         proteina: 30,
         ingredientes: ["pan integral", "huevos", "aguacate"],
+        momento: "desayuno",
       },
       {
         id: "sab-media",
@@ -233,6 +268,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 280,
         proteina: 32,
         ingredientes: ["proteína whey", "leche desnatada", "manzana"],
+        momento: "media_manana",
       },
       {
         id: "sab-comida",
@@ -240,6 +276,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 620,
         proteina: 44,
         ingredientes: ["pasta integral", "atún al natural", "tomate", "queso fresco batido 0%"],
+        momento: "comida",
       },
       {
         id: "sab-merienda",
@@ -247,6 +284,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 250,
         proteina: 20,
         ingredientes: ["yogur griego 0%", "miel", "nueces"],
+        momento: "merienda",
       },
       {
         id: "sab-cena",
@@ -254,6 +292,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 480,
         proteina: 30,
         ingredientes: ["huevos", "patata", "cebolla", "lechuga", "tomate"],
+        momento: "cena",
       },
     ],
   },
@@ -268,6 +307,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 420,
         proteina: 35,
         ingredientes: ["huevos", "avena", "proteína whey"],
+        momento: "desayuno",
       },
       {
         id: "dom-libre",
@@ -275,6 +315,7 @@ export const MEAL_PLAN: DayPlan[] = [
         kcal: 0,
         proteina: 0,
         ingredientes: [],
+        momento: "libre",
       },
     ],
   },
@@ -285,48 +326,192 @@ export const WORKOUT_PLAN: WorkoutDay[] = [
     day: "lunes",
     titulo: "Empuje — pecho, hombro, tríceps",
     ejercicios: [
-      { id: "lun-1", nombre: "Press banca (barra o mancuernas)", pauta: "4 x 8-10" },
-      { id: "lun-2", nombre: "Press militar con mancuernas", pauta: "3 x 10" },
-      { id: "lun-3", nombre: "Fondos en paralelas o press inclinado", pauta: "3 x 10-12" },
-      { id: "lun-4", nombre: "Elevaciones laterales", pauta: "3 x 15" },
-      { id: "lun-5", nombre: "Extensión de tríceps en polea", pauta: "3 x 12" },
-      { id: "lun-6", nombre: "Plancha abdominal", pauta: "3 x 40 seg" },
+      {
+        id: "lun-1",
+        nombre: "Press banca (barra o mancuernas)",
+        pauta: "4 x 8-10",
+        emoji: "🏋️",
+        comoHacerlo: "Espalda pegada al banco, baja la barra controlada hasta rozar el pecho y empuja sin bloquear los codos de golpe.",
+      },
+      {
+        id: "lun-2",
+        nombre: "Press militar con mancuernas",
+        pauta: "3 x 10",
+        emoji: "💪",
+        comoHacerlo: "De pie o sentado, empuja las mancuernas hacia arriba sin arquear la espalda, codos ligeramente por delante del cuerpo.",
+      },
+      {
+        id: "lun-3",
+        nombre: "Fondos en paralelas o press inclinado",
+        pauta: "3 x 10-12",
+        emoji: "🤸",
+        comoHacerlo: "Baja hasta que los hombros queden a la altura de los codos, manteniendo el torso ligeramente inclinado hacia delante.",
+      },
+      {
+        id: "lun-4",
+        nombre: "Elevaciones laterales",
+        pauta: "3 x 15",
+        emoji: "🙆",
+        comoHacerlo: "Sube los brazos ligeramente flexionados hasta la altura del hombro, sin impulso, controlando la bajada.",
+      },
+      {
+        id: "lun-5",
+        nombre: "Extensión de tríceps en polea",
+        pauta: "3 x 12",
+        emoji: "🦾",
+        comoHacerlo: "Codos pegados al cuerpo, extiende hacia abajo solo con el antebrazo, sin mover el hombro.",
+      },
+      {
+        id: "lun-6",
+        nombre: "Plancha abdominal",
+        pauta: "3 x 40 seg",
+        emoji: "🧘",
+        comoHacerlo: "Cuerpo en línea recta de cabeza a talones, abdomen apretado, sin dejar caer la cadera.",
+      },
     ],
   },
   {
     day: "martes",
     titulo: "Tirón — espalda, bíceps",
     ejercicios: [
-      { id: "mar-1", nombre: "Dominadas o jalón al pecho", pauta: "4 x 8-10" },
-      { id: "mar-2", nombre: "Remo con barra o mancuerna", pauta: "4 x 10" },
-      { id: "mar-3", nombre: "Remo en polea baja", pauta: "3 x 12" },
-      { id: "mar-4", nombre: "Curl de bíceps con barra", pauta: "3 x 12" },
-      { id: "mar-5", nombre: "Face pull", pauta: "3 x 15" },
-      { id: "mar-6", nombre: "Elevación de piernas colgado / crunch", pauta: "3 x 15" },
+      {
+        id: "mar-1",
+        nombre: "Dominadas o jalón al pecho",
+        pauta: "4 x 8-10",
+        emoji: "🧗",
+        comoHacerlo: "Tira llevando el pecho hacia la barra, juntando los omóplatos, y baja controlando hasta extender casi del todo.",
+      },
+      {
+        id: "mar-2",
+        nombre: "Remo con barra o mancuerna",
+        pauta: "4 x 10",
+        emoji: "🚣",
+        comoHacerlo: "Espalda recta e inclinada hacia delante, tira del peso hacia el abdomen apretando la espalda arriba.",
+      },
+      {
+        id: "mar-3",
+        nombre: "Remo en polea baja",
+        pauta: "3 x 12",
+        emoji: "🎣",
+        comoHacerlo: "Tira con la espalda, no con los brazos: lleva los codos atrás y junta los omóplatos al final del movimiento.",
+      },
+      {
+        id: "mar-4",
+        nombre: "Curl de bíceps con barra",
+        pauta: "3 x 12",
+        emoji: "💪",
+        comoHacerlo: "Codos fijos pegados al torso, sube el peso solo flexionando el codo, sin balancear el cuerpo.",
+      },
+      {
+        id: "mar-5",
+        nombre: "Face pull",
+        pauta: "3 x 15",
+        emoji: "🎯",
+        comoHacerlo: "Tira de la cuerda hacia la cara separando las manos, codos altos, apretando la parte trasera del hombro.",
+      },
+      {
+        id: "mar-6",
+        nombre: "Elevación de piernas colgado / crunch",
+        pauta: "3 x 15",
+        emoji: "🌀",
+        comoHacerlo: "Sube las piernas con control usando el abdomen, evitando balancearte con el impulso.",
+      },
     ],
   },
   {
     day: "jueves",
     titulo: "Piernas",
     ejercicios: [
-      { id: "jue-1", nombre: "Sentadilla con barra", pauta: "4 x 8-10" },
-      { id: "jue-2", nombre: "Peso muerto rumano", pauta: "3 x 10" },
-      { id: "jue-3", nombre: "Zancadas con mancuernas", pauta: "3 x 12 por pierna" },
-      { id: "jue-4", nombre: "Prensa de piernas", pauta: "3 x 12" },
-      { id: "jue-5", nombre: "Elevación de talones (gemelos)", pauta: "4 x 15" },
-      { id: "jue-6", nombre: "Plancha lateral", pauta: "3 x 30 seg por lado" },
+      {
+        id: "jue-1",
+        nombre: "Sentadilla con barra",
+        pauta: "4 x 8-10",
+        emoji: "🏋️",
+        comoHacerlo: "Baja como si te sentaras, rodillas en línea con los pies, pecho arriba, hasta que las caderas bajen de las rodillas.",
+      },
+      {
+        id: "jue-2",
+        nombre: "Peso muerto rumano",
+        pauta: "3 x 10",
+        emoji: "🏋️‍♂️",
+        comoHacerlo: "Piernas casi rectas, baja la barra pegada a las piernas empujando la cadera hacia atrás, espalda siempre recta.",
+      },
+      {
+        id: "jue-3",
+        nombre: "Zancadas con mancuernas",
+        pauta: "3 x 12 por pierna",
+        emoji: "🚶",
+        comoHacerlo: "Da un paso largo y baja hasta que ambas rodillas queden casi a 90°, sin que la rodilla delantera sobrepase el pie.",
+      },
+      {
+        id: "jue-4",
+        nombre: "Prensa de piernas",
+        pauta: "3 x 12",
+        emoji: "🦵",
+        comoHacerlo: "Baja controlado hasta 90° de rodilla, sin despegar la zona lumbar del respaldo.",
+      },
+      {
+        id: "jue-5",
+        nombre: "Elevación de talones (gemelos)",
+        pauta: "4 x 15",
+        emoji: "🦶",
+        comoHacerlo: "Sube todo lo que puedas sobre la punta del pie y baja despacio estirando bien el gemelo.",
+      },
+      {
+        id: "jue-6",
+        nombre: "Plancha lateral",
+        pauta: "3 x 30 seg por lado",
+        emoji: "🧘",
+        comoHacerlo: "Cuerpo en línea recta apoyado en el antebrazo, cadera elevada sin caer, abdomen apretado.",
+      },
     ],
   },
   {
     day: "viernes",
     titulo: "Full body + definición",
     ejercicios: [
-      { id: "vie-1", nombre: "Peso muerto convencional (carga moderada)", pauta: "3 x 8" },
-      { id: "vie-2", nombre: "Press banca inclinado con mancuernas", pauta: "3 x 10" },
-      { id: "vie-3", nombre: "Remo con mancuerna a una mano", pauta: "3 x 10" },
-      { id: "vie-4", nombre: "Sentadilla goblet", pauta: "3 x 12" },
-      { id: "vie-5", nombre: "Circuito metabólico (burpees, mountain climbers, kettlebell swings)", pauta: "3 rondas x 40s/20s" },
-      { id: "vie-6", nombre: "Plancha + rotaciones rusas", pauta: "3 x 15" },
+      {
+        id: "vie-1",
+        nombre: "Peso muerto convencional (carga moderada)",
+        pauta: "3 x 8",
+        emoji: "🏋️‍♂️",
+        comoHacerlo: "Barra pegada a las espinillas, espalda recta, empuja el suelo con los pies para levantarte, cadera y hombros a la vez.",
+      },
+      {
+        id: "vie-2",
+        nombre: "Press banca inclinado con mancuernas",
+        pauta: "3 x 10",
+        emoji: "🏋️",
+        comoHacerlo: "Banco a 30-45°, baja las mancuernas a la altura del pecho superior y empuja sin chocarlas arriba.",
+      },
+      {
+        id: "vie-3",
+        nombre: "Remo con mancuerna a una mano",
+        pauta: "3 x 10",
+        emoji: "🚣",
+        comoHacerlo: "Apoya una mano y rodilla en el banco, tira de la mancuerna hacia la cadera manteniendo la espalda recta.",
+      },
+      {
+        id: "vie-4",
+        nombre: "Sentadilla goblet",
+        pauta: "3 x 12",
+        emoji: "🏋️",
+        comoHacerlo: "Sujeta el peso pegado al pecho y baja manteniendo el torso vertical y los codos entre las rodillas.",
+      },
+      {
+        id: "vie-5",
+        nombre: "Circuito metabólico (burpees, mountain climbers, kettlebell swings)",
+        pauta: "3 rondas x 40s/20s",
+        emoji: "🔥",
+        comoHacerlo: "Encadena los tres ejercicios a ritmo alto durante 40 segundos, descansa 20 y repite. Prioriza la técnica antes que la velocidad.",
+      },
+      {
+        id: "vie-6",
+        nombre: "Plancha + rotaciones rusas",
+        pauta: "3 x 15",
+        emoji: "🌀",
+        comoHacerlo: "Tras la plancha, siéntate con rodillas flexionadas y gira el torso de lado a lado sin dejar caer la espalda.",
+      },
     ],
   },
 ];
@@ -340,6 +525,16 @@ export const SHOPPING_CATEGORIES = [
   "Suplementos",
   "Otros",
 ];
+
+export const CATEGORY_EMOJI: Record<string, string> = {
+  "Proteínas": "🍗",
+  "Lácteos": "🥛",
+  "Carbohidratos": "🌾",
+  "Verduras y fruta": "🥦",
+  "Frutos secos y grasas": "🥜",
+  "Suplementos": "💊",
+  "Otros": "🧂",
+};
 
 function item(id: string, nombre: string, categoria: string): ShoppingItem {
   return { id, nombre, categoria, base: true };
