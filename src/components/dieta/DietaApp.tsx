@@ -80,7 +80,10 @@ export default function DietaApp() {
   return (
     <div className="mx-auto max-w-2xl select-text px-4 py-6 sm:py-8">
       <header className="mb-6">
-        <h1 className="text-xl font-bold text-gradient-brand">Mi Dieta y Entreno</h1>
+        <div className="flex items-center gap-2">
+          <span className="animate-bounce-slow text-2xl">🔥</span>
+          <h1 className="text-xl font-bold text-gradient-brand">Mi Dieta y Entreno</h1>
+        </div>
         <p className="text-xs text-slate-500 mt-0.5">
           Plan personal de definición · entreno lunes, martes, jueves y viernes
         </p>
