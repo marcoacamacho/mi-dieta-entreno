@@ -94,4 +94,5 @@ export interface Profile {
   pesoObjetivo: number;
   actividad: "sedentario" | "ligero" | "moderado" | "activo" | "muy_activo";
   objetivo: "definir" | "mantener" | "recomposicion";
+  diaPesaje: DayKey;
 }

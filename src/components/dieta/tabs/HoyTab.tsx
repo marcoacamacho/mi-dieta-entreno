@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { DayPlan, WorkoutDay, DailyLog, ExtraFood } from "../types";
-import { formatDisplayDate, addDays } from "../dateUtils";
+import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
+import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge } from "../ui";
-import { MOMENTO_INFO } from "../planData";
+import { MOMENTO_INFO, MEAL_PLAN } from "../planData";
+import { youtubeSearchUrl } from "../youtube";
 import { Targets } from "../calc";
 
 const HERO_STYLES = {
@@ -30,12 +31,21 @@ interface Props {
   log: DailyLog;
   updateLog: (updater: (prev: DailyLog) => DailyLog) => void;
   targets: Targets;
+  diaPesaje: DayKey;
 }
 
-export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, updateLog, targets }: Props) {
+export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, updateLog, targets, diaPesaje }: Props) {
   const [extraNombre, setExtraNombre] = useState("");
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
+  const [mostrarPesoManual, setMostrarPesoManual] = useState(false);
+
+  const dayKey = dayOfWeekKey(date);
+  const diasParaPesaje = diasHastaProximo(dayKey, diaPesaje);
+  const esDiaPesaje = diasParaPesaje === 0;
+  const mananaKey = dayOfWeekKey(addDays(date, 1));
+  const mananaEsPesaje = diasHastaProximo(mananaKey, diaPesaje) === 0;
+  const mananaPlan = MEAL_PLAN.find((d) => d.day === mananaKey);
 
   const mealsKcal = dayPlan.meals
     .filter((m) => log.comidosIds.includes(m.id))
@@ -144,16 +154,56 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
         </div>
         <ProgressBar value={consumidoProt} max={targets.proteina} colorClass="bg-emerald-500" />
 
-        <div className="mt-4 flex items-center gap-3">
-          <label className="text-xs text-slate-400 shrink-0">Tu peso corporal hoy (kg)</label>
-          <input
-            type="number"
-            step="0.1"
-            value={log.pesoCorporal ?? ""}
-            onChange={(e) => setPesoCorporal(e.target.value)}
-            placeholder="—"
-            className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
-          />
+        <div className="mt-4">
+          {esDiaPesaje ? (
+            <div className="rounded-xl border border-indigo-400/30 bg-indigo-500/10 p-3">
+              <div className="text-sm font-semibold text-indigo-200">📅 ¡Hoy toca pesarte!</div>
+              <p className="mt-0.5 text-xs text-slate-400">
+                Pésate en ayunas, recién levantado, y anota el resultado.
+              </p>
+              <div className="mt-2 flex items-center gap-2">
+                <input
+                  type="number"
+                  step="0.1"
+                  value={log.pesoCorporal ?? ""}
+                  onChange={(e) => setPesoCorporal(e.target.value)}
+                  placeholder="kg"
+                  autoFocus
+                  className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                />
+              </div>
+            </div>
+          ) : mananaEsPesaje ? (
+            <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3">
+              <div className="text-sm font-semibold text-amber-200">⏰ Mañana toca pesarte</div>
+              <p className="mt-0.5 text-xs text-slate-400">
+                Descansa bien esta noche y pésate mañana en ayunas para que el dato sea fiable.
+              </p>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between text-xs text-slate-500">
+              <span>
+                ⚖️ Próximo pesaje: {DAY_LABELS[diaPesaje]} (en {diasParaPesaje} día{diasParaPesaje === 1 ? "" : "s"})
+              </span>
+              {!mostrarPesoManual && (
+                <button onClick={() => setMostrarPesoManual(true)} className="text-indigo-300 hover:text-indigo-200">
+                  Registrar de todas formas
+                </button>
+              )}
+            </div>
+          )}
+          {!esDiaPesaje && !mananaEsPesaje && mostrarPesoManual && (
+            <div className="mt-2 flex items-center gap-2">
+              <input
+                type="number"
+                step="0.1"
+                value={log.pesoCorporal ?? ""}
+                onChange={(e) => setPesoCorporal(e.target.value)}
+                placeholder="kg"
+                className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+              />
+            </div>
+          )}
         </div>
       </Card>
 
@@ -187,12 +237,45 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                       {meal.kcal} kcal · {meal.proteina}g proteína
                     </div>
                   )}
+                  {meal.kcal > 0 && (
+                    <a
+                      href={youtubeSearchUrl(`${meal.nombre} receta`)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                    >
+                      ▶ Ver cómo se hace
+                    </a>
+                  )}
                 </div>
               </li>
             );
           })}
         </ul>
       </Card>
+
+      {mananaPlan && (
+        <Card className="border-dashed">
+          <SectionTitle>🔜 Adelanto de mañana — {DAY_LABELS[mananaKey]}</SectionTitle>
+          <ul className="space-y-1.5">
+            {mananaPlan.meals.map((meal) => {
+              const info = MOMENTO_INFO[meal.momento];
+              return (
+                <li key={meal.id} className="flex items-center gap-2.5 text-sm text-slate-400">
+                  <span className="text-base">{info.emoji}</span>
+                  <span className="min-w-0 flex-1 truncate">{meal.nombre}</span>
+                  {meal.kcal > 0 && <span className="shrink-0 text-xs text-slate-600">{meal.kcal} kcal</span>}
+                </li>
+              );
+            })}
+          </ul>
+          {mananaPlan.entreno && (
+            <p className="mt-2 text-xs text-slate-500">
+              🏋️ Mañana también toca entreno — prepara lo que necesites con antelación.
+            </p>
+          )}
+        </Card>
+      )}
 
       <Card>
         <SectionTitle>Comida fuera del menú</SectionTitle>

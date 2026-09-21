@@ -48,3 +48,9 @@ export function formatDisplayDate(iso: string): string {
   const texto = DISPLAY_FORMATTER.format(parseISO(iso));
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
+
+// Días que faltan desde `actual` hasta la próxima vez que caiga `objetivo`
+// (0 = hoy, 1 = mañana, ..., 6 = dentro de una semana justa).
+export function diasHastaProximo(actual: DayKey, objetivo: DayKey): number {
+  return (DAY_INDEX.indexOf(objetivo) - DAY_INDEX.indexOf(actual) + 7) % 7;
+}

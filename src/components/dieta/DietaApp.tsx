@@ -17,7 +17,7 @@ type TabKey = "hoy" | "compra" | "recetas" | "suplementos" | "perfil";
 const TABS: { key: TabKey; label: string }[] = [
   { key: "hoy", label: "Hoy" },
   { key: "compra", label: "Compra" },
-  { key: "recetas", label: "Recetas dulces" },
+  { key: "recetas", label: "Recetas" },
   { key: "suplementos", label: "Suplementos" },
   { key: "perfil", label: "Perfil" },
 ];
@@ -109,6 +109,7 @@ export default function DietaApp() {
           log={log}
           updateLog={updateLog}
           targets={targets}
+          diaPesaje={profile.diaPesaje}
         />
       )}
       {tab === "compra" && (

@@ -1,5 +1,6 @@
 import { RECETAS, CategoriaReceta } from "../recetasData";
 import { Card, SectionTitle } from "../ui";
+import { youtubeSearchUrl } from "../youtube";
 
 const SECCIONES: { categoria: CategoriaReceta; titulo: string; emoji: string }[] = [
   { categoria: "dulce", titulo: "Recetas dulces", emoji: "🍓" },
@@ -44,6 +45,14 @@ export default function RecetasTab() {
                     <li key={i}>{p}</li>
                   ))}
                 </ol>
+                <a
+                  href={youtubeSearchUrl(`${r.nombre} receta`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                >
+                  ▶ Ver vídeo de cómo hacerla
+                </a>
               </Card>
             ))}
           </div>

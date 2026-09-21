@@ -46,4 +46,5 @@ export const DEFAULT_PROFILE: Profile = {
   pesoObjetivo: 75,
   actividad: "moderado",
   objetivo: "definir",
+  diaPesaje: "lunes",
 };

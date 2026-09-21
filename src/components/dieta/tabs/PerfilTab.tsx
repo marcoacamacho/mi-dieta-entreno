@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Profile, DailyLog } from "../types";
+import { Profile, DailyLog, DAY_KEYS, DAY_LABELS } from "../types";
 import { Targets } from "../calc";
 import { Card, SectionTitle } from "../ui";
 
@@ -107,6 +107,20 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             </select>
           </label>
           <label className="text-xs text-slate-400 col-span-2">
+            ⚖️ Día de la semana para pesarte
+            <select
+              value={profile.diaPesaje}
+              onChange={(e) => set("diaPesaje", e.target.value as Profile["diaPesaje"])}
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            >
+              {DAY_KEYS.map((d) => (
+                <option key={d} value={d} className="bg-neutral-900">
+                  {DAY_LABELS[d]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="text-xs text-slate-400 col-span-2">
             Objetivo
             <select
               value={profile.objetivo}
@@ -171,7 +185,8 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
         <SectionTitle>Evolución de tu peso corporal</SectionTitle>
         {pesoData.length < 2 ? (
           <p className="text-xs text-slate-500">
-            Registra tu peso cada día desde la pestaña &quot;Hoy&quot; para ver aquí tu evolución.
+            Pésate una vez por semana (el {DAY_LABELS[profile.diaPesaje].toLowerCase()}) desde la
+            pestaña &quot;Hoy&quot; para ver aquí tu evolución.
           </p>
         ) : (
           <ResponsiveContainer width="100%" height={220}>
