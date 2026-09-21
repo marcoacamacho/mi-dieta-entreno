@@ -65,6 +65,48 @@ export function ProgressBar({
   );
 }
 
+export function CircularProgress({
+  value,
+  max,
+  size = 128,
+  strokeWidth = 11,
+  colorClass = "stroke-emerald-400",
+  trackClass = "stroke-white/10",
+  children,
+}: {
+  value: number;
+  max: number;
+  size?: number;
+  strokeWidth?: number;
+  colorClass?: string;
+  trackClass?: string;
+  children?: ReactNode;
+}) {
+  const pct = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference * (1 - pct);
+  return (
+    <div className="relative inline-flex shrink-0 items-center justify-center" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="-rotate-90">
+        <circle cx={size / 2} cy={size / 2} r={radius} strokeWidth={strokeWidth} fill="none" className={trackClass} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className={`${colorClass} transition-[stroke-dashoffset] duration-700 ease-out`}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">{children}</div>
+    </div>
+  );
+}
+
 export function Badge({ children, tone = "indigo" }: { children: ReactNode; tone?: "indigo" | "emerald" | "amber" | "slate" }) {
   const tones: Record<string, string> = {
     indigo: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",

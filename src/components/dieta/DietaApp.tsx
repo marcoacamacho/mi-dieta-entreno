@@ -6,6 +6,7 @@ import { DailyLog, Profile, ShoppingItem } from "./types";
 import { MEAL_PLAN, WORKOUT_PLAN } from "./planData";
 import { todayISO, dayOfWeekKey } from "./dateUtils";
 import { calcularObjetivos, DEFAULT_PROFILE } from "./calc";
+import { IconHoy, IconProgreso, IconCompra, IconRecetas, IconSuplementos, IconPerfil } from "./icons";
 import HoyTab from "./tabs/HoyTab";
 import ProgresoTab from "./tabs/ProgresoTab";
 import CompraTab from "./tabs/CompraTab";
@@ -15,13 +16,13 @@ import PerfilTab from "./tabs/PerfilTab";
 
 type TabKey = "hoy" | "progreso" | "compra" | "recetas" | "suplementos" | "perfil";
 
-const TABS: { key: TabKey; label: string }[] = [
-  { key: "hoy", label: "Hoy" },
-  { key: "progreso", label: "Progreso" },
-  { key: "compra", label: "Compra" },
-  { key: "recetas", label: "Recetas" },
-  { key: "suplementos", label: "Suplementos" },
-  { key: "perfil", label: "Perfil" },
+const TABS: { key: TabKey; label: string; icon: (p: { className?: string }) => React.ReactElement }[] = [
+  { key: "hoy", label: "Hoy", icon: IconHoy },
+  { key: "progreso", label: "Progreso", icon: IconProgreso },
+  { key: "compra", label: "Compra", icon: IconCompra },
+  { key: "recetas", label: "Recetas", icon: IconRecetas },
+  { key: "suplementos", label: "Suplem.", icon: IconSuplementos },
+  { key: "perfil", label: "Perfil", icon: IconPerfil },
 ];
 
 const EMPTY_LOG: DailyLog = { comidosIds: [], extras: [], ejercicios: {} };
@@ -78,7 +79,8 @@ export default function DietaApp() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl select-text px-4 py-6 sm:py-8">
+    <>
+    <div className="mx-auto max-w-2xl select-text px-4 pb-28 pt-6 sm:pt-8">
       <header className="mb-6">
         <div className="flex items-center gap-2">
           <span className="animate-bounce-slow text-2xl">🔥</span>
@@ -88,22 +90,6 @@ export default function DietaApp() {
           Plan personal de definición · entreno lunes, martes, jueves y viernes
         </p>
       </header>
-
-      <nav className="mb-6 flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all active:scale-95 ${
-              tab === t.key
-                ? "btn-brand"
-                : "border border-white/10 text-slate-400 hover:bg-white/5 hover:text-slate-200"
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </nav>
 
       {tab === "hoy" && (
         <HoyTab
@@ -132,5 +118,33 @@ export default function DietaApp() {
         <PerfilTab profile={profile} setProfile={setProfile} targets={targets} logs={logs} />
       )}
     </div>
+
+    <nav className="bottom-nav fixed inset-x-0 bottom-0 z-20">
+      <div className="mx-auto flex max-w-2xl items-stretch justify-between px-1">
+        {TABS.map((t) => {
+          const active = tab === t.key;
+          const Icon = t.icon;
+          return (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className="flex flex-1 flex-col items-center gap-0.5 py-2.5 transition-transform active:scale-90"
+            >
+              <span
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+                  active ? "bg-indigo-500/20 text-indigo-300" : "text-slate-500"
+                }`}
+              >
+                <Icon className="h-[18px] w-[18px]" />
+              </span>
+              <span className={`text-[10px] font-medium ${active ? "text-indigo-300" : "text-slate-500"}`}>
+                {t.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
-import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody } from "../ui";
+import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
 import { MOMENTO_INFO, MEAL_PLAN } from "../planData";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
@@ -147,21 +147,34 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
 
       <Card>
         <SectionTitle>Calorías de hoy</SectionTitle>
-        <div className="grid grid-cols-2 gap-4 mb-3">
-          <div>
-            <div className="text-2xl font-bold text-white tabular-nums">{kcalMostrado}</div>
-            <div className="text-xs text-slate-500">kcal consumidas de {targets.kcal}</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-emerald-400 tabular-nums">{protMostrado}g</div>
-            <div className="text-xs text-slate-500">proteína de {targets.proteina}g objetivo</div>
+        <div className="flex items-center gap-5">
+          <CircularProgress
+            value={consumidoKcal}
+            max={targets.kcal}
+            colorClass={consumidoKcal > targets.kcal ? "stroke-rose-400" : "stroke-emerald-400"}
+          >
+            <span className="text-2xl font-bold text-white tabular-nums">{kcalMostrado}</span>
+            <span className="text-[10px] text-slate-500">de {targets.kcal} kcal</span>
+          </CircularProgress>
+          <div className="min-w-0 flex-1 space-y-3">
+            <div>
+              <div className="mb-1 flex items-center justify-between text-xs text-slate-400">
+                <span>🍗 Proteína</span>
+                <span className="font-semibold text-emerald-400 tabular-nums">
+                  {protMostrado}g / {targets.proteina}g
+                </span>
+              </div>
+              <ProgressBar value={consumidoProt} max={targets.proteina} colorClass="bg-emerald-500" />
+            </div>
+            <div
+              className={`rounded-xl px-3 py-2 text-xs font-medium ${
+                restante >= 0 ? "bg-white/5 text-slate-300" : "bg-rose-500/10 text-rose-300"
+              }`}
+            >
+              {restante >= 0 ? `⏳ Te quedan ${restante} kcal` : `⚠️ Te has pasado ${Math.abs(restante)} kcal`}
+            </div>
           </div>
         </div>
-        <ProgressBar value={consumidoKcal} max={targets.kcal} colorClass={consumidoKcal > targets.kcal ? "bg-rose-500" : "bg-indigo-500"} />
-        <div className="mt-1 text-xs text-slate-500">
-          {restante >= 0 ? `Te quedan ${restante} kcal` : `Te has pasado ${Math.abs(restante)} kcal`}
-        </div>
-        <ProgressBar value={consumidoProt} max={targets.proteina} colorClass="bg-emerald-500" />
 
         <div className="mt-4">
           {esDiaPesaje ? (
