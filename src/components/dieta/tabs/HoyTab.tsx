@@ -58,6 +58,8 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
   const consumidoKcal = mealsKcal + extrasKcal;
   const consumidoProt = mealsProt + extrasProt;
   const restante = targets.kcal - consumidoKcal;
+  const menuCompletado =
+    !dayPlan.diaLibreDieta && dayPlan.meals.length > 0 && dayPlan.meals.every((m) => log.comidosIds.includes(m.id));
 
   function toggleMeal(id: string) {
     updateLog((prev) => ({
@@ -108,7 +110,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
         <div className="flex items-center justify-between gap-3">
           <button
             onClick={() => setDate(addDays(date, -1))}
-            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 hover:bg-white/10"
+            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 transition-all hover:bg-white/10 active:scale-90"
           >
             ← Ayer
           </button>
@@ -128,7 +130,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
           </div>
           <button
             onClick={() => setDate(addDays(date, 1))}
-            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 hover:bg-white/10"
+            className="rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-slate-300 transition-all hover:bg-white/10 active:scale-90"
           >
             Mañana →
           </button>
@@ -209,6 +211,11 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
 
       <Card>
         <SectionTitle>{dayPlan.diaLibreDieta ? "Comidas orientativas" : "Menú del día"}</SectionTitle>
+        {menuCompletado && (
+          <div className="animate-pop mb-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-2.5 text-center text-sm font-semibold text-emerald-300">
+            🎉 ¡Menú del día completado!
+          </div>
+        )}
         <ul className="space-y-2">
           {dayPlan.meals.map((meal) => {
             const done = log.comidosIds.includes(meal.id);
@@ -216,11 +223,16 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
             return (
               <li
                 key={meal.id}
-                className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors ${
+                className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-all duration-300 ${
                   done ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/10 bg-white/[0.02]"
                 }`}
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none">
+                <span
+                  key={done ? `${meal.id}-done` : `${meal.id}-pending`}
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none transition-transform duration-300 ${
+                    done ? "animate-pop scale-110" : "scale-100"
+                  }`}
+                >
                   {info.emoji}
                 </span>
                 <input
@@ -316,7 +328,10 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                 <span className="text-slate-300">
                   {e.nombre} <span className="text-slate-500">· {e.kcal} kcal · {e.proteina}g prot</span>
                 </span>
-                <button onClick={() => removeExtra(e.id)} className="text-rose-400 hover:text-rose-300 text-xs">
+                <button
+                  onClick={() => removeExtra(e.id)}
+                  className="text-rose-400 transition-transform hover:text-rose-300 active:scale-90 text-xs"
+                >
                   Quitar
                 </button>
               </li>

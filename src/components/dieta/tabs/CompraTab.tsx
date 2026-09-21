@@ -90,7 +90,10 @@ export default function CompraTab({ checked, setChecked, custom, setCustom }: Pr
       <Card>
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-slate-400">🛒 {totalMarcados} de {items.length} ya en el carro / en casa</span>
-          <button onClick={resetChecks} className="text-xs text-indigo-300 hover:text-indigo-200">
+          <button
+            onClick={resetChecks}
+            className="text-xs text-indigo-300 transition-transform hover:text-indigo-200 active:scale-90"
+          >
             Desmarcar todo (nueva semana)
           </button>
         </div>
@@ -115,11 +118,18 @@ export default function CompraTab({ checked, setChecked, custom, setCustom }: Pr
                     onChange={() => toggle(it.id)}
                     className="h-4 w-4 accent-emerald-500"
                   />
-                  <span className={`flex-1 text-sm ${checked[it.id] ? "text-slate-500 line-through" : "text-slate-200"}`}>
+                  <span
+                    className={`flex-1 text-sm transition-all duration-300 ${
+                      checked[it.id] ? "text-slate-500 line-through opacity-60" : "text-slate-200"
+                    }`}
+                  >
                     {it.nombre}
                   </span>
                   {!it.base && (
-                    <button onClick={() => removeCustom(it.id)} className="text-rose-400 hover:text-rose-300 text-xs">
+                    <button
+                      onClick={() => removeCustom(it.id)}
+                      className="text-rose-400 transition-transform hover:text-rose-300 active:scale-90 text-xs"
+                    >
                       Quitar
                     </button>
                   )}

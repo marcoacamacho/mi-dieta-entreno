@@ -49,7 +49,7 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
   return (
     <div className="space-y-5">
       <div className={`rounded-2xl bg-gradient-to-br ${style.gradient} p-5 text-center`}>
-        <div className="text-3xl">{style.emoji}</div>
+        <div className="animate-bounce-slow text-3xl">{style.emoji}</div>
         <div className="mt-1 text-base font-bold text-white">{style.titulo}</div>
         <p className="mt-2 text-sm text-slate-200">{r.frase}</p>
       </div>

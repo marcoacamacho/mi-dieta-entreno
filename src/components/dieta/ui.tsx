@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`glass-card rounded-2xl p-4 sm:p-5 ${className}`}>{children}</div>;
+  return <div className={`glass-card animate-fade-in-up rounded-2xl p-4 sm:p-5 ${className}`}>{children}</div>;
 }
 
 export function SectionTitle({ children }: { children: ReactNode }) {
@@ -36,7 +36,9 @@ export function Badge({ children, tone = "indigo" }: { children: ReactNode; tone
     slate: "bg-white/5 text-slate-400 border-white/10",
   };
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium ${tones[tone]}`}>
+    <span
+      className={`animate-pop inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium ${tones[tone]}`}
+    >
       {children}
     </span>
   );

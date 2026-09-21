@@ -91,7 +91,7 @@ export default function DietaApp() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all active:scale-95 ${
               tab === t.key
                 ? "btn-brand"
                 : "border border-white/10 text-slate-400 hover:bg-white/5 hover:text-slate-200"

@@ -39,12 +39,16 @@ body {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: #fff;
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
-  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 .btn-brand:hover:not(:disabled) {
   filter: brightness(1.08);
   box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+.btn-brand:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 .btn-brand:disabled {
@@ -62,4 +66,62 @@ body {
 ::selection {
   background: #4338ca;
   color: #fff;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes bounceSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.35s ease-out both;
+}
+
+.animate-pop {
+  animation: popIn 0.3s ease-out both;
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-pop,
+  .animate-bounce-slow {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.001ms !important;
+  }
 }
