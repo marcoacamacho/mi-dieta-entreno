@@ -49,7 +49,7 @@ export default function RecetasTab() {
                   href={youtubeSearchUrl(`${r.nombre} receta`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                  className="mt-3 inline-block text-xs text-lime-300 hover:text-lime-200"
                 >
                   ▶ Ver vídeo de cómo hacerla
                 </a>

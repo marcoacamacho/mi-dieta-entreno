@@ -48,7 +48,7 @@ export function CollapsibleBody({ open, children }: { open: boolean; children: R
 export function ProgressBar({
   value,
   max,
-  colorClass = "bg-indigo-500",
+  colorClass = "bg-lime-500",
 }: {
   value: number;
   max: number;
@@ -70,7 +70,7 @@ export function CircularProgress({
   max,
   size = 128,
   strokeWidth = 11,
-  colorClass = "stroke-emerald-400",
+  colorClass = "stroke-lime-400",
   trackClass = "stroke-white/10",
   children,
 }: {
@@ -109,7 +109,7 @@ export function CircularProgress({
 
 export function Badge({ children, tone = "indigo" }: { children: ReactNode; tone?: "indigo" | "emerald" | "amber" | "slate" }) {
   const tones: Record<string, string> = {
-    indigo: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",
+    indigo: "bg-lime-500/15 text-lime-300 border-lime-500/30",
     emerald: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
     amber: "bg-amber-500/15 text-amber-300 border-amber-500/30",
     slate: "bg-white/5 text-slate-400 border-white/10",

@@ -48,7 +48,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             <select
               value={profile.sexo}
               onChange={(e) => set("sexo", e.target.value as Profile["sexo"])}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             >
               <option value="hombre" className="bg-neutral-900">Hombre</option>
               <option value="mujer" className="bg-neutral-900">Mujer</option>
@@ -60,7 +60,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
               type="number"
               value={profile.edad}
               onChange={(e) => set("edad", Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
           </label>
           <label className="text-xs text-slate-400">
@@ -70,7 +70,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
               step="0.1"
               value={profile.peso}
               onChange={(e) => set("peso", Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
           </label>
           <label className="text-xs text-slate-400">
@@ -79,7 +79,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
               type="number"
               value={profile.altura}
               onChange={(e) => set("altura", Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
           </label>
           <label className="text-xs text-slate-400 col-span-2">
@@ -89,7 +89,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
               step="0.1"
               value={profile.pesoObjetivo}
               onChange={(e) => set("pesoObjetivo", Number(e.target.value))}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
           </label>
           <label className="text-xs text-slate-400 col-span-2">
@@ -97,7 +97,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             <select
               value={profile.actividad}
               onChange={(e) => set("actividad", e.target.value as Profile["actividad"])}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             >
               <option value="sedentario" className="bg-neutral-900">Sedentario (trabajo de oficina, poco movimiento)</option>
               <option value="ligero" className="bg-neutral-900">Ligero (entrenas 1-3 días/semana)</option>
@@ -111,7 +111,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             <select
               value={profile.diaPesaje}
               onChange={(e) => set("diaPesaje", e.target.value as Profile["diaPesaje"])}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             >
               {DAY_KEYS.map((d) => (
                 <option key={d} value={d} className="bg-neutral-900">
@@ -125,7 +125,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             <select
               value={profile.objetivo}
               onChange={(e) => set("objetivo", e.target.value as Profile["objetivo"])}
-              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             >
               <option value="definir" className="bg-neutral-900">Perder grasa / definir (déficit ~20%)</option>
               <option value="recomposicion" className="bg-neutral-900">Recomposición (déficit ligero ~10%)</option>
@@ -162,7 +162,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
         </p>
       </Card>
 
-      <Card className="bg-gradient-to-br from-indigo-500/15 via-violet-500/10 to-transparent">
+      <Card className="bg-gradient-to-br from-lime-500/15 via-sky-500/10 to-transparent">
         <SectionTitle>🎯 Tu objetivo de peso</SectionTitle>
         <div className="grid grid-cols-3 gap-3 text-center">
           <div>
@@ -170,7 +170,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
             <div className="text-xs text-slate-500">actual (kg)</div>
           </div>
           <div>
-            <div className="text-xl font-bold text-indigo-300">{profile.pesoObjetivo}</div>
+            <div className="text-xl font-bold text-lime-300">{profile.pesoObjetivo}</div>
             <div className="text-xs text-slate-500">objetivo (kg)</div>
           </div>
           <div>
@@ -217,7 +217,7 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
                 strokeDasharray="4 4"
                 label={{ value: "🎯 objetivo", position: "insideTopRight", fill: "#34d399", fontSize: 11 }}
               />
-              <Line type="monotone" dataKey="peso" stroke="#a5b4fc" strokeWidth={2.5} dot={{ r: 3, fill: "#818cf8" }} />
+              <Line type="monotone" dataKey="peso" stroke="#bef264" strokeWidth={2.5} dot={{ r: 3, fill: "#a3e635" }} />
             </LineChart>
           </ResponsiveContainer>
         )}

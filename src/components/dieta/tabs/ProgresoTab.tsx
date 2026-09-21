@@ -21,7 +21,7 @@ interface Props {
 
 const ESTADO_STYLE: Record<EstadoProgreso, { gradient: string; emoji: string; titulo: string }> = {
   inicio: {
-    gradient: "from-indigo-500/20 via-violet-500/10 to-transparent",
+    gradient: "from-lime-500/20 via-sky-500/10 to-transparent",
     emoji: "🌱",
     titulo: "Estás empezando",
   },
@@ -31,7 +31,7 @@ const ESTADO_STYLE: Record<EstadoProgreso, { gradient: string; emoji: string; ti
     titulo: "¡Objetivo conseguido!",
   },
   bien: {
-    gradient: "from-emerald-500/20 via-indigo-500/10 to-transparent",
+    gradient: "from-emerald-500/20 via-lime-500/10 to-transparent",
     emoji: "🔥",
     titulo: "Vas muy bien",
   },
@@ -73,7 +73,7 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                       <span>Comidas del menú completadas</span>
                       <span className="font-semibold text-slate-200">{r.adherenciaMenuPct}%</span>
                     </div>
-                    <ProgressBar value={r.adherenciaMenuPct} max={100} colorClass="bg-indigo-500" />
+                    <ProgressBar value={r.adherenciaMenuPct} max={100} colorClass="bg-lime-500" />
                   </div>
                 )}
                 {r.proteinaPromedioPct !== null && (
@@ -98,7 +98,7 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                     <ProgressBar
                       value={r.kcalPromedioPct}
                       max={100}
-                      colorClass={r.kcalPromedioPct > 110 ? "bg-rose-500" : "bg-indigo-500"}
+                      colorClass={r.kcalPromedioPct > 110 ? "bg-rose-500" : "bg-lime-500"}
                     />
                   </div>
                 )}
@@ -115,7 +115,7 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                   <div className="text-xs text-slate-500">inicio (kg)</div>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-indigo-300">{r.pesoActual}</div>
+                  <div className="text-lg font-bold text-lime-300">{r.pesoActual}</div>
                   <div className="text-xs text-slate-500">actual (kg)</div>
                 </div>
                 <div>
@@ -168,10 +168,10 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                     <Line
                       type="monotone"
                       dataKey="peso"
-                      stroke="#a5b4fc"
+                      stroke="#bef264"
                       strokeWidth={2.5}
-                      dot={{ r: 3, fill: "#818cf8" }}
-                      activeDot={{ r: 5, fill: "#818cf8", stroke: "#e4e4e7", strokeWidth: 2 }}
+                      dot={{ r: 3, fill: "#a3e635" }}
+                      activeDot={{ r: 5, fill: "#a3e635", stroke: "#e4e4e7", strokeWidth: 2 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>

@@ -30,7 +30,7 @@ export default function SuplementosTab() {
                   href={t.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-300 hover:text-indigo-200 underline underline-offset-2"
+                  className="text-lime-300 hover:text-lime-200 underline underline-offset-2"
                 >
                   {t.nombre}
                 </a>

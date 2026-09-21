@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050507;
+  --background: #04070c;
   --foreground: #e4e4e7;
 }
 
@@ -25,9 +25,9 @@ body {
       transparent 1px,
       transparent 34px
     ),
-    radial-gradient(900px 460px at 12% -8%, rgba(16, 185, 129, 0.14) 0%, transparent 58%),
-    radial-gradient(820px 440px at 92% -4%, rgba(56, 130, 246, 0.16) 0%, transparent 55%),
-    radial-gradient(700px 480px at 105% 65%, rgba(99, 102, 241, 0.1) 0%, transparent 55%),
+    radial-gradient(950px 480px at 10% -10%, rgba(163, 230, 53, 0.13) 0%, transparent 58%),
+    radial-gradient(900px 480px at 92% -6%, rgba(56, 189, 248, 0.2) 0%, transparent 55%),
+    radial-gradient(800px 520px at 100% 62%, rgba(56, 130, 246, 0.16) 0%, transparent 55%),
     var(--background);
   background-attachment: fixed;
   color: var(--foreground);
@@ -43,15 +43,15 @@ body {
 }
 
 .btn-brand {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
+  background: linear-gradient(135deg, #bef264 0%, #84cc16 100%);
+  color: #0a0a0d;
+  box-shadow: 0 4px 16px rgba(163, 230, 53, 0.3);
   transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
 .btn-brand:hover:not(:disabled) {
-  filter: brightness(1.08);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+  filter: brightness(1.06);
+  box-shadow: 0 6px 20px rgba(163, 230, 53, 0.4);
 }
 
 .btn-brand:active:not(:disabled) {
@@ -64,15 +64,15 @@ body {
 }
 
 .text-gradient-brand {
-  background: linear-gradient(135deg, #e0e7ff 0%, #c4b5fd 60%, #a5b4fc 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #ecfccb 55%, #bef264 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 ::selection {
-  background: #4338ca;
-  color: #fff;
+  background: #bef264;
+  color: #0a0a0d;
 }
 
 @keyframes fadeInUp {

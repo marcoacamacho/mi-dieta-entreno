@@ -68,12 +68,12 @@ export default function CompraTab({ checked, setChecked, custom, setCustom }: Pr
             value={nuevoNombre}
             onChange={(e) => setNuevoNombre(e.target.value)}
             placeholder="Ej: papel de horno"
-            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
           />
           <select
             value={nuevaCategoria}
             onChange={(e) => setNuevaCategoria(e.target.value)}
-            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
           >
             {SHOPPING_CATEGORIES.map((c) => (
               <option key={c} value={c} className="bg-neutral-900">
@@ -92,7 +92,7 @@ export default function CompraTab({ checked, setChecked, custom, setCustom }: Pr
           <span className="text-xs text-slate-400">🛒 {totalMarcados} de {items.length} ya en el carro / en casa</span>
           <button
             onClick={resetChecks}
-            className="text-xs text-indigo-300 transition-transform hover:text-indigo-200 active:scale-90"
+            className="text-xs text-lime-300 transition-transform hover:text-lime-200 active:scale-90"
           >
             Desmarcar todo (nueva semana)
           </button>

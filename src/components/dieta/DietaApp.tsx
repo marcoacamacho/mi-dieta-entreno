@@ -132,12 +132,12 @@ export default function DietaApp() {
             >
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
-                  active ? "bg-indigo-500/20 text-indigo-300" : "text-slate-500"
+                  active ? "bg-lime-500/20 text-lime-300" : "text-slate-500"
                 }`}
               >
                 <Icon className="h-[18px] w-[18px]" />
               </span>
-              <span className={`text-[10px] font-medium ${active ? "text-indigo-300" : "text-slate-500"}`}>
+              <span className={`text-[10px] font-medium ${active ? "text-lime-300" : "text-slate-500"}`}>
                 {t.label}
               </span>
             </button>

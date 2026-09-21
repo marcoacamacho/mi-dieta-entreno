@@ -11,7 +11,7 @@ import { Targets } from "../calc";
 
 const HERO_STYLES = {
   entreno: {
-    gradient: "from-indigo-500/25 via-violet-500/15 to-transparent",
+    gradient: "from-lime-500/25 via-sky-500/15 to-transparent",
     frase: "💪 Día de entreno — dale caña y llega fuerte a cada serie.",
   },
   descanso: {
@@ -151,7 +151,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
           <CircularProgress
             value={consumidoKcal}
             max={targets.kcal}
-            colorClass={consumidoKcal > targets.kcal ? "stroke-rose-400" : "stroke-emerald-400"}
+            colorClass={consumidoKcal > targets.kcal ? "stroke-rose-400" : "stroke-lime-400"}
           >
             <span className="text-2xl font-bold text-white tabular-nums">{kcalMostrado}</span>
             <span className="text-[10px] text-slate-500">de {targets.kcal} kcal</span>
@@ -178,8 +178,8 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
 
         <div className="mt-4">
           {esDiaPesaje ? (
-            <div className="rounded-xl border border-indigo-400/30 bg-indigo-500/10 p-3">
-              <div className="text-sm font-semibold text-indigo-200">📅 ¡Hoy toca pesarte!</div>
+            <div className="rounded-xl border border-lime-400/30 bg-lime-500/10 p-3">
+              <div className="text-sm font-semibold text-lime-200">📅 ¡Hoy toca pesarte!</div>
               <p className="mt-0.5 text-xs text-slate-400">
                 Pésate en ayunas, recién levantado, y anota el resultado.
               </p>
@@ -191,7 +191,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                   onChange={(e) => setPesoCorporal(e.target.value)}
                   placeholder="kg"
                   autoFocus
-                  className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                  className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
                 />
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                 ⚖️ Próximo pesaje: {DAY_LABELS[diaPesaje]} (en {diasParaPesaje} día{diasParaPesaje === 1 ? "" : "s"})
               </span>
               {!mostrarPesoManual && (
-                <button onClick={() => setMostrarPesoManual(true)} className="text-indigo-300 hover:text-indigo-200">
+                <button onClick={() => setMostrarPesoManual(true)} className="text-lime-300 hover:text-lime-200">
                   Registrar de todas formas
                 </button>
               )}
@@ -222,7 +222,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                 value={log.pesoCorporal ?? ""}
                 onChange={(e) => setPesoCorporal(e.target.value)}
                 placeholder="kg"
-                className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
               />
             </div>
           )}
@@ -287,7 +287,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                           href={youtubeSearchUrl(`${meal.nombre} receta`)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                          className="mt-0.5 inline-block text-xs text-lime-300 hover:text-lime-200"
                         >
                           ▶ Ver cómo se hace
                         </a>
@@ -331,7 +331,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
             value={extraNombre}
             onChange={(e) => setExtraNombre(e.target.value)}
             placeholder="Qué has comido"
-            className="w-full min-w-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            className="w-full min-w-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
           />
           <div className="flex gap-2">
             <input
@@ -339,14 +339,14 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
               onChange={(e) => setExtraKcal(e.target.value)}
               type="number"
               placeholder="kcal"
-              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
             <input
               value={extraProt}
               onChange={(e) => setExtraProt(e.target.value)}
               type="number"
               placeholder="prot g"
-              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
             <button
               onClick={addExtra}
@@ -402,7 +402,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                             href={youtubeSearchUrl(`${ex.nombre} técnica ejercicio`)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                            className="mt-0.5 inline-block text-xs text-lime-300 hover:text-lime-200"
                           >
                             ▶ Ver vídeo
                           </a>
@@ -415,14 +415,14 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                           value={entry.peso ?? ""}
                           onChange={(e) => setEjercicio(ex.id, "peso", e.target.value)}
                           placeholder="kg"
-                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
                         />
                         <input
                           type="number"
                           value={entry.reps ?? ""}
                           onChange={(e) => setEjercicio(ex.id, "reps", e.target.value)}
                           placeholder="reps"
-                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
                         />
                       </div>
                     </li>
