@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import { DailyLog, Profile } from "../types";
 import { Targets } from "../calc";
-import { calcularResumenProgreso, EstadoProgreso } from "../progreso";
+import { calcularResumenProgreso, calcularResumenSemanal, calcularEntrenosRecientes, EstadoProgreso } from "../progreso";
 import { Card, SectionTitle, ProgressBar } from "../ui";
 
 interface Props {
@@ -44,6 +44,8 @@ const ESTADO_STYLE: Record<EstadoProgreso, { gradient: string; emoji: string; ti
 
 export default function ProgresoTab({ logs, profile, targets }: Props) {
   const r = calcularResumenProgreso(logs, profile, targets);
+  const semana = calcularResumenSemanal(logs);
+  const recientes = calcularEntrenosRecientes(logs);
   const style = ESTADO_STYLE[r.estado];
 
   return (
@@ -53,6 +55,26 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
         <div className="mt-1 text-base font-bold text-white">{style.titulo}</div>
         <p className="mt-2 text-sm text-slate-200">{r.frase}</p>
       </div>
+
+      <Card>
+        <SectionTitle>📅 Esta semana</SectionTitle>
+        <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-xl bg-white/5 px-2 py-3">
+            <div className="text-lg font-bold text-lime-300 tabular-nums">
+              {semana.entrenosCompletados}/{semana.entrenosPlanificados}
+            </div>
+            <div className="text-[10px] text-slate-500">🏋️ entrenos</div>
+          </div>
+          <div className="rounded-xl bg-white/5 px-2 py-3">
+            <div className="text-lg font-bold text-white tabular-nums">{semana.pesoTotalLevantado}</div>
+            <div className="text-[10px] text-slate-500">💪 kg levantados</div>
+          </div>
+          <div className="rounded-xl bg-white/5 px-2 py-3">
+            <div className="text-lg font-bold text-white tabular-nums">{semana.setsRegistrados}</div>
+            <div className="text-[10px] text-slate-500">📝 sets anotados</div>
+          </div>
+        </div>
+      </Card>
 
       {r.diasRegistrados === 0 ? (
         <Card>
@@ -200,6 +222,36 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                       {e.primerPeso}kg → {e.ultimoPeso}kg ({e.delta > 0 ? "+" : ""}
                       {e.delta}kg)
                     </span>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
+
+          {recientes.length > 0 && (
+            <Card>
+              <SectionTitle>🗓️ Últimos entrenos</SectionTitle>
+              <ul className="space-y-1.5">
+                {recientes.map((e) => (
+                  <li
+                    key={e.fecha}
+                    className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.03] px-3 py-2.5"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-sm text-slate-200">
+                        {e.diaLabel} {e.esHoy && <span className="text-slate-500">(hoy)</span>}
+                      </div>
+                      <div className="text-xs text-slate-500">{e.titulo}</div>
+                    </div>
+                    {e.completado ? (
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-lime-500/20 text-lime-300">
+                        ✓
+                      </span>
+                    ) : (
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/15 text-slate-600">
+                        ·
+                      </span>
+                    )}
                   </li>
                 ))}
               </ul>

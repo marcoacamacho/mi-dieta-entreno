@@ -1,7 +1,7 @@
-import { DailyLog, Profile } from "./types";
+import { DailyLog, Profile, DAY_KEYS, DAY_LABELS } from "./types";
 import { Targets } from "./calc";
-import { MEAL_PLAN, EXERCISE_INDEX } from "./planData";
-import { dayOfWeekKey } from "./dateUtils";
+import { MEAL_PLAN, EXERCISE_INDEX, WORKOUT_PLAN } from "./planData";
+import { dayOfWeekKey, todayISO, addDays } from "./dateUtils";
 
 export interface EjercicioProgreso {
   id: string;
@@ -237,4 +237,87 @@ export function calcularResumenProgreso(
     frase: fraseMotivacional(estado, semilla),
     estado,
   };
+}
+
+function tieneEntrenoRegistrado(log: DailyLog | undefined): boolean {
+  if (!log) return false;
+  return Object.values(log.ejercicios).some((e) => typeof e.peso === "number" || typeof e.reps === "number");
+}
+
+export interface ResumenSemanal {
+  entrenosCompletados: number;
+  entrenosPlanificados: number;
+  pesoTotalLevantado: number;
+  setsRegistrados: number;
+}
+
+/** Resumen de la semana en curso (lunes a hoy — los días futuros de la
+ * semana no cuentan todavía). */
+export function calcularResumenSemanal(logs: Record<string, DailyLog>): ResumenSemanal {
+  const hoy = todayISO();
+  const idxHoy = DAY_KEYS.indexOf(dayOfWeekKey(hoy));
+  const lunes = addDays(hoy, -idxHoy);
+
+  let entrenosCompletados = 0;
+  let entrenosPlanificados = 0;
+  let pesoTotalLevantado = 0;
+  let setsRegistrados = 0;
+
+  for (let i = 0; i < 7; i++) {
+    const fecha = addDays(lunes, i);
+    if (fecha > hoy) break;
+    const workoutDay = WORKOUT_PLAN.find((d) => d.day === dayOfWeekKey(fecha));
+    if (!workoutDay) continue;
+    entrenosPlanificados++;
+    const log = logs[fecha];
+    if (tieneEntrenoRegistrado(log)) entrenosCompletados++;
+    if (log) {
+      for (const entry of Object.values(log.ejercicios)) {
+        if (typeof entry.peso === "number") {
+          setsRegistrados++;
+          pesoTotalLevantado += entry.peso * (entry.reps ?? 1);
+        }
+      }
+    }
+  }
+
+  return {
+    entrenosCompletados,
+    entrenosPlanificados,
+    pesoTotalLevantado: Math.round(pesoTotalLevantado),
+    setsRegistrados,
+  };
+}
+
+export interface EntrenoReciente {
+  fecha: string;
+  diaLabel: string;
+  titulo: string;
+  completado: boolean;
+  esHoy: boolean;
+}
+
+/** Últimos días de entreno planificados (hacia atrás desde hoy), con si se
+ * registró o no. Para poder ver la constancia reciente de un vistazo. */
+export function calcularEntrenosRecientes(logs: Record<string, DailyLog>, cantidad = 5): EntrenoReciente[] {
+  const hoy = todayISO();
+  const resultado: EntrenoReciente[] = [];
+  let fecha = hoy;
+  let vueltas = 0;
+  while (resultado.length < cantidad && vueltas < 60) {
+    const dayKey = dayOfWeekKey(fecha);
+    const workoutDay = WORKOUT_PLAN.find((d) => d.day === dayKey);
+    if (workoutDay) {
+      resultado.push({
+        fecha,
+        diaLabel: DAY_LABELS[dayKey],
+        titulo: workoutDay.titulo,
+        completado: tieneEntrenoRegistrado(logs[fecha]),
+        esHoy: fecha === hoy,
+      });
+    }
+    fecha = addDays(fecha, -1);
+    vueltas++;
+  }
+  return resultado;
 }
