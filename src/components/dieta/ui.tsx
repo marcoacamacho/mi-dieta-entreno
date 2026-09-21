@@ -8,6 +8,43 @@ export function SectionTitle({ children }: { children: ReactNode }) {
   return <h2 className="text-sm font-semibold text-slate-200 mb-3 tracking-wide">{children}</h2>;
 }
 
+export function CollapsibleHeader({
+  title,
+  open,
+  onToggle,
+}: {
+  title: ReactNode;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button onClick={onToggle} className="flex w-full items-center justify-between text-left">
+      <SectionTitle>{title}</SectionTitle>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-300 ${
+          open ? "rotate-180" : "rotate-0"
+        }`}
+      >
+        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </button>
+  );
+}
+
+export function CollapsibleBody({ open, children }: { open: boolean; children: ReactNode }) {
+  return (
+    <div
+      className={`grid transition-all duration-300 ease-in-out ${
+        open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+      }`}
+    >
+      <div className="overflow-hidden">{children}</div>
+    </div>
+  );
+}
+
 export function ProgressBar({
   value,
   max,
