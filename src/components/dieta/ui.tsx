@@ -43,3 +43,29 @@ export function Badge({ children, tone = "indigo" }: { children: ReactNode; tone
     </span>
   );
 }
+
+const CONFETTI_EMOJIS = ["🎉", "✨", "💪", "🔥", "⭐", "🥳"];
+
+/** Ráfaga de confeti de un solo uso: solo "estalla" cuando `active` pasa de
+ * false a true (al montarse), no se repite en cada re-render. */
+export function Confetti({ active }: { active: boolean }) {
+  if (!active) return null;
+  const piezas = Array.from({ length: 14 }, (_, i) => i);
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {piezas.map((i) => (
+        <span
+          key={i}
+          className="animate-confetti-fall absolute top-0 text-base"
+          style={{
+            left: `${(i * 37) % 100}%`,
+            animationDelay: `${(i % 5) * 0.08}s`,
+            animationDuration: `${1.1 + (i % 4) * 0.15}s`,
+          }}
+        >
+          {CONFETTI_EMOJIS[i % CONFETTI_EMOJIS.length]}
+        </span>
+      ))}
+    </div>
+  );
+}

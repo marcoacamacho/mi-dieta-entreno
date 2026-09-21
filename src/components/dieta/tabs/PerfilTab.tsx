@@ -157,7 +157,8 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
         </div>
         <p className="mt-3 text-xs text-slate-500">
           Gasto calórico estimado (TDEE): {targets.tdee} kcal/día. El menú de la pestaña &quot;Hoy&quot; ronda
-          los 2150-2250 kcal como referencia: ajusta las raciones al alza o a la baja según este objetivo.
+          los 1970-2150 kcal como referencia (por debajo de tu objetivo a propósito, para dejar margen):
+          ajusta las raciones al alza o a la baja según este objetivo.
         </p>
       </Card>
 

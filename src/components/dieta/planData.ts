@@ -1,6 +1,6 @@
 import { DayPlan, WorkoutDay, ShoppingItem, Momento } from "./types";
 
-// Plan orientativo ~2150-2250 kcal / ~180-190 g proteína al día (referencia
+// Plan orientativo ~1970-2150 kcal / ~180-190 g proteína al día (referencia
 // para una persona activa en fase de definición, aprox. 80-90 kg). Ajusta
 // raciones al alza o a la baja según el objetivo calculado en "Perfil".
 
@@ -37,8 +37,8 @@ export const MEAL_PLAN: DayPlan[] = [
       {
         id: "lun-media",
         nombre: "Batido de proteína, plátano y crema de cacahuete",
-        kcal: 300,
-        proteina: 34,
+        kcal: 260,
+        proteina: 33,
         ingredientes: ["proteína whey", "leche desnatada", "plátano", "crema de cacahuete"],
         momento: "media_manana",
       },
@@ -61,7 +61,7 @@ export const MEAL_PLAN: DayPlan[] = [
       {
         id: "lun-merienda",
         nombre: "Yogur griego 0% con nueces, miel y canela",
-        kcal: 250,
+        kcal: 220,
         proteina: 20,
         ingredientes: ["yogur griego 0%", "nueces", "miel", "canela"],
         momento: "merienda",
@@ -208,8 +208,8 @@ export const MEAL_PLAN: DayPlan[] = [
       {
         id: "jue-comida",
         nombre: "Pollo al curry rojo con leche de coco ligera, arroz basmati y verduras salteadas",
-        kcal: 670,
-        proteina: 55,
+        kcal: 630,
+        proteina: 54,
         ingredientes: [
           "pechuga de pollo",
           "pasta de curry rojo",
@@ -223,8 +223,8 @@ export const MEAL_PLAN: DayPlan[] = [
       {
         id: "jue-merienda",
         nombre: "Yogur griego con proteína, canela y trocitos de manzana",
-        kcal: 270,
-        proteina: 29,
+        kcal: 240,
+        proteina: 28,
         ingredientes: ["yogur griego 0%", "proteína whey", "canela", "manzana"],
         momento: "merienda",
       },

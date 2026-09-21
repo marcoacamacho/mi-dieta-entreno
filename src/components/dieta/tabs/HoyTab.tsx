@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
-import { Card, SectionTitle, ProgressBar, Badge } from "../ui";
+import { Card, SectionTitle, ProgressBar, Badge, Confetti } from "../ui";
 import { MOMENTO_INFO, MEAL_PLAN } from "../planData";
 import { youtubeSearchUrl } from "../youtube";
+import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
 
 const HERO_STYLES = {
@@ -60,6 +61,10 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
   const restante = targets.kcal - consumidoKcal;
   const menuCompletado =
     !dayPlan.diaLibreDieta && dayPlan.meals.length > 0 && dayPlan.meals.every((m) => log.comidosIds.includes(m.id));
+  const totalMenuKcal = dayPlan.meals.reduce((acc, m) => acc + m.kcal, 0);
+  const menuSePasaDelObjetivo = !dayPlan.diaLibreDieta && totalMenuKcal > targets.kcal;
+  const kcalMostrado = useCountUp(consumidoKcal);
+  const protMostrado = useCountUp(consumidoProt);
 
   function toggleMeal(id: string) {
     updateLog((prev) => ({
@@ -142,11 +147,11 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
         <SectionTitle>Calorías de hoy</SectionTitle>
         <div className="grid grid-cols-2 gap-4 mb-3">
           <div>
-            <div className="text-2xl font-bold text-white">{consumidoKcal}</div>
+            <div className="text-2xl font-bold text-white tabular-nums">{kcalMostrado}</div>
             <div className="text-xs text-slate-500">kcal consumidas de {targets.kcal}</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-emerald-400">{consumidoProt}g</div>
+            <div className="text-2xl font-bold text-emerald-400 tabular-nums">{protMostrado}g</div>
             <div className="text-xs text-slate-500">proteína de {targets.proteina}g objetivo</div>
           </div>
         </div>
@@ -212,8 +217,15 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
       <Card>
         <SectionTitle>{dayPlan.diaLibreDieta ? "Comidas orientativas" : "Menú del día"}</SectionTitle>
         {menuCompletado && (
-          <div className="animate-pop mb-3 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-2.5 text-center text-sm font-semibold text-emerald-300">
+          <div className="animate-pop relative mb-3 overflow-hidden rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-2.5 text-center text-sm font-semibold text-emerald-300">
+            <Confetti active={menuCompletado} />
             🎉 ¡Menú del día completado!
+          </div>
+        )}
+        {!menuCompletado && menuSePasaDelObjetivo && (
+          <div className="mb-3 rounded-xl border border-amber-400/30 bg-amber-500/10 p-2.5 text-xs text-amber-200">
+            ⚠️ El menú completo de hoy son {totalMenuKcal} kcal, por encima de tu objetivo ({targets.kcal} kcal).
+            Recorta un poco alguna ración o salta la media mañana si vas sobrado.
           </div>
         )}
         <ul className="space-y-2">

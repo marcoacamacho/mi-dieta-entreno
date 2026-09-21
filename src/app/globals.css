@@ -115,10 +115,26 @@ body {
   animation: bounceSlow 2.4s ease-in-out infinite;
 }
 
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(90px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-confetti-fall {
+  animation: confettiFall 1.4s ease-in forwards;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in-up,
   .animate-pop,
-  .animate-bounce-slow {
+  .animate-bounce-slow,
+  .animate-confetti-fall {
     animation: none !important;
   }
   * {
