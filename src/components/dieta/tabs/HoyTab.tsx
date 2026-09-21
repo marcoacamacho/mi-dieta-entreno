@@ -220,7 +220,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                   done ? "border-emerald-500/30 bg-emerald-500/10" : "border-white/10 bg-white/[0.02]"
                 }`}
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-lg">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none">
                   {info.emoji}
                 </span>
                 <input
@@ -279,30 +279,35 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
 
       <Card>
         <SectionTitle>Comida fuera del menú</SectionTitle>
-        <div className="grid grid-cols-[1fr_80px_80px_auto] gap-2 mb-3">
+        <div className="flex flex-col gap-2 mb-3">
           <input
             value={extraNombre}
             onChange={(e) => setExtraNombre(e.target.value)}
             placeholder="Qué has comido"
-            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            className="w-full min-w-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
           />
-          <input
-            value={extraKcal}
-            onChange={(e) => setExtraKcal(e.target.value)}
-            type="number"
-            placeholder="kcal"
-            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
-          />
-          <input
-            value={extraProt}
-            onChange={(e) => setExtraProt(e.target.value)}
-            type="number"
-            placeholder="prot g"
-            className="rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
-          />
-          <button onClick={addExtra} className="btn-brand rounded-lg px-3 py-1.5 text-sm font-medium">
-            Añadir
-          </button>
+          <div className="flex gap-2">
+            <input
+              value={extraKcal}
+              onChange={(e) => setExtraKcal(e.target.value)}
+              type="number"
+              placeholder="kcal"
+              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            />
+            <input
+              value={extraProt}
+              onChange={(e) => setExtraProt(e.target.value)}
+              type="number"
+              placeholder="prot g"
+              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-indigo-400"
+            />
+            <button
+              onClick={addExtra}
+              className="btn-brand shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium"
+            >
+              Añadir
+            </button>
+          </div>
         </div>
         {log.extras.length > 0 && (
           <ul className="space-y-1.5">
@@ -330,13 +335,21 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
               return (
                 <li key={ex.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5">
                   <div className="flex items-start gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 text-lg">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none">
                       {ex.emoji}
                     </span>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="text-sm text-slate-200">{ex.nombre}</div>
                       <div className="text-xs text-slate-500">{ex.pauta}</div>
                       <div className="mt-1 text-xs italic text-slate-500">{ex.comoHacerlo}</div>
+                      <a
+                        href={youtubeSearchUrl(`${ex.nombre} técnica ejercicio`)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                      >
+                        ▶ Ver vídeo
+                      </a>
                     </div>
                   </div>
                   <div className="mt-2.5 flex gap-2">

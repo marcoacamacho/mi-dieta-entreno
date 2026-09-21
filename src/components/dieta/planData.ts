@@ -532,7 +532,7 @@ export const WORKOUT_PLAN: WorkoutDay[] = [
         id: "vie-2",
         nombre: "Peso muerto rumano",
         pauta: "3 x 10",
-        emoji: "🏋️‍♂️",
+        emoji: "🏋️",
         comoHacerlo: "Piernas casi rectas, baja la barra pegada a las piernas empujando la cadera hacia atrás, espalda siempre recta.",
       },
       {
