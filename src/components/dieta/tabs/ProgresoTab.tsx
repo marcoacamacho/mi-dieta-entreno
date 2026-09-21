@@ -1,3 +1,13 @@
+import {
+  Line,
+  LineChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { DailyLog, Profile } from "../types";
 import { Targets } from "../calc";
 import { calcularResumenProgreso, EstadoProgreso } from "../progreso";
@@ -119,6 +129,55 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
                 <p className="mt-3 text-center text-xs text-slate-500">
                   Ritmo aproximado: {r.ritmoSemanalKg > 0 ? "+" : ""}
                   {r.ritmoSemanalKg.toFixed(2)} kg/semana
+                </p>
+              )}
+
+              {r.serieDePeso.length >= 2 ? (
+                <ResponsiveContainer width="100%" height={220} className="mt-4">
+                  <LineChart data={r.serieDePeso}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+                    <XAxis
+                      dataKey="fecha"
+                      tick={{ fontSize: 11, fill: "#71717a" }}
+                      axisLine={{ stroke: "#3f3f46" }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: "#71717a" }}
+                      domain={["dataMin - 1", "dataMax + 1"]}
+                      width={40}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: 12,
+                        background: "rgba(23,23,27,0.9)",
+                        backdropFilter: "blur(8px)",
+                        border: "1px solid rgba(255,255,255,0.1)",
+                      }}
+                      labelStyle={{ color: "#e4e4e7" }}
+                      itemStyle={{ color: "#e4e4e7" }}
+                    />
+                    <ReferenceLine
+                      y={profile.pesoObjetivo}
+                      stroke="#34d399"
+                      strokeDasharray="4 4"
+                      label={{ value: "🎯 objetivo", position: "insideTopRight", fill: "#34d399", fontSize: 11 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="peso"
+                      stroke="#a5b4fc"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: "#818cf8" }}
+                      activeDot={{ r: 5, fill: "#818cf8", stroke: "#e4e4e7", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className="mt-3 text-xs text-slate-500">
+                  Con un pesaje más ya se podrá dibujar aquí la gráfica de evolución.
                 </p>
               )}
             </Card>

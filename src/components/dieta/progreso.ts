@@ -14,6 +14,11 @@ export interface EjercicioProgreso {
 
 export type EstadoProgreso = "inicio" | "objetivo" | "bien" | "mejorable";
 
+export interface PuntoPeso {
+  fecha: string;
+  peso: number;
+}
+
 export interface ResumenProgreso {
   diasRegistrados: number;
   adherenciaMenuPct: number | null;
@@ -25,6 +30,7 @@ export interface ResumenProgreso {
   pesoActual: number | null;
   deltaPesoTotal: number | null;
   ritmoSemanalKg: number | null;
+  serieDePeso: PuntoPeso[];
   ejerciciosProgreso: EjercicioProgreso[];
   consejos: string[];
   frase: string;
@@ -225,6 +231,7 @@ export function calcularResumenProgreso(
     pesoActual,
     deltaPesoTotal,
     ritmoSemanalKg,
+    serieDePeso: pesosOrdenados.map((p) => ({ fecha: p.fecha.slice(5), peso: p.peso })),
     ejerciciosProgreso,
     consejos,
     frase: fraseMotivacional(estado, semilla),
