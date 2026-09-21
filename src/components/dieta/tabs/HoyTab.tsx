@@ -40,6 +40,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
   const [mostrarPesoManual, setMostrarPesoManual] = useState(false);
+  const [entrenoAbierto, setEntrenoAbierto] = useState(true);
 
   const dayKey = dayOfWeekKey(date);
   const diasParaPesaje = diasHastaProximo(dayKey, diaPesaje);
@@ -355,51 +356,73 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
 
       {workoutDay && (
         <Card>
-          <SectionTitle>Entreno de hoy — {workoutDay.titulo}</SectionTitle>
-          <ul className="space-y-2">
-            {workoutDay.ejercicios.map((ex) => {
-              const entry = log.ejercicios[ex.id] ?? {};
-              return (
-                <li key={ex.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5">
-                  <div className="flex items-start gap-2.5">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none">
-                      {ex.emoji}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm text-slate-200">{ex.nombre}</div>
-                      <div className="text-xs text-slate-500">{ex.pauta}</div>
-                      <div className="mt-1 text-xs italic text-slate-500">{ex.comoHacerlo}</div>
-                      <a
-                        href={youtubeSearchUrl(`${ex.nombre} técnica ejercicio`)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
-                      >
-                        ▶ Ver vídeo
-                      </a>
-                    </div>
-                  </div>
-                  <div className="mt-2.5 flex gap-2">
-                    <input
-                      type="number"
-                      step="0.5"
-                      value={entry.peso ?? ""}
-                      onChange={(e) => setEjercicio(ex.id, "peso", e.target.value)}
-                      placeholder="kg"
-                      className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
-                    />
-                    <input
-                      type="number"
-                      value={entry.reps ?? ""}
-                      onChange={(e) => setEjercicio(ex.id, "reps", e.target.value)}
-                      placeholder="reps"
-                      className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
-                    />
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <button
+            onClick={() => setEntrenoAbierto((v) => !v)}
+            className="flex w-full items-center justify-between text-left"
+          >
+            <SectionTitle>Entreno de hoy — {workoutDay.titulo}</SectionTitle>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className={`h-5 w-5 shrink-0 text-slate-400 transition-transform duration-300 ${
+                entrenoAbierto ? "rotate-180" : "rotate-0"
+              }`}
+            >
+              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${
+              entrenoAbierto ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+            }`}
+          >
+            <div className="overflow-hidden">
+              <ul className="space-y-2 pt-3">
+                {workoutDay.ejercicios.map((ex) => {
+                  const entry = log.ejercicios[ex.id] ?? {};
+                  return (
+                    <li key={ex.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5">
+                      <div className="flex items-start gap-2.5">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/5 text-lg leading-none">
+                          {ex.emoji}
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm text-slate-200">{ex.nombre}</div>
+                          <div className="text-xs text-slate-500">{ex.pauta}</div>
+                          <div className="mt-1 text-xs italic text-slate-500">{ex.comoHacerlo}</div>
+                          <a
+                            href={youtubeSearchUrl(`${ex.nombre} técnica ejercicio`)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-0.5 inline-block text-xs text-indigo-300 hover:text-indigo-200"
+                          >
+                            ▶ Ver vídeo
+                          </a>
+                        </div>
+                      </div>
+                      <div className="mt-2.5 flex gap-2">
+                        <input
+                          type="number"
+                          step="0.5"
+                          value={entry.peso ?? ""}
+                          onChange={(e) => setEjercicio(ex.id, "peso", e.target.value)}
+                          placeholder="kg"
+                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                        />
+                        <input
+                          type="number"
+                          value={entry.reps ?? ""}
+                          onChange={(e) => setEjercicio(ex.id, "reps", e.target.value)}
+                          placeholder="reps"
+                          className="w-20 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-indigo-400"
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </Card>
       )}
     </div>
