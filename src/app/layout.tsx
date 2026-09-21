@@ -11,6 +11,13 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Mi Dieta y Entreno",
   description: "Plan personal de dieta alta en proteína y entrenamiento",
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -19,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0d",
+  themeColor: "#050507",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
