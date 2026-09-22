@@ -19,7 +19,13 @@ export async function GET(req: NextRequest) {
     const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 1 });
     const blob = blobs.find((b) => b.pathname === BLOB_PATHNAME);
     if (!blob) return NextResponse.json({ data: null });
-    const res = await fetch(blob.url, { cache: "no-store" });
+    // El almacén está configurado en acceso privado: hace falta el token
+    // para leer el contenido, la URL sola ya no es públicamente accesible.
+    const res = await fetch(blob.url, {
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
+    });
+    if (!res.ok) throw new Error(`No se pudo leer el almacén (${res.status})`);
     const data = await res.json();
     return NextResponse.json({ data });
   } catch (e) {
@@ -37,7 +43,7 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     await put(BLOB_PATHNAME, JSON.stringify(body), {
-      access: "public",
+      access: "private",
       addRandomSuffix: false,
       allowOverwrite: true,
       contentType: "application/json",
