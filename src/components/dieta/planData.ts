@@ -21,17 +21,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "lun-desayuno",
-        nombre: "Tortilla de claras con espinacas y queso feta + avena con canela",
-        kcal: 430,
-        proteina: 39,
-        ingredientes: [
-          "huevos",
-          "claras de huevo pasteurizadas",
-          "espinacas",
-          "queso feta",
-          "avena",
-          "canela",
-        ],
+        nombre: "Café con leche + tostada de pan integral con aguacate y huevo",
+        kcal: 400,
+        proteina: 24,
+        ingredientes: ["café", "leche desnatada", "pan integral", "aguacate", "huevos"],
         momento: "desayuno",
       },
       {
@@ -44,16 +37,17 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "lun-comida",
-        nombre: "Pollo al limón y hierbas con arroz integral salteado y brócoli al ajillo",
+        nombre: "Lentejas estofadas con pollo, chorizo magro y verduras",
         kcal: 660,
-        proteina: 56,
+        proteina: 52,
         ingredientes: [
+          "lentejas",
           "pechuga de pollo",
-          "limón",
-          "hierbas provenzales",
+          "chorizo magro",
+          "zanahoria",
+          "cebolla",
+          "pimiento",
           "ajo",
-          "arroz integral",
-          "brócoli",
           "aceite de oliva",
         ],
         momento: "comida",
@@ -83,10 +77,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "mar-desayuno",
-        nombre: "Porridge de avena con proteína, arándanos, almendras y un toque de vainilla",
-        kcal: 440,
-        proteina: 37,
-        ingredientes: ["avena", "proteína whey", "arándanos", "almendras", "extracto de vainilla"],
+        nombre: "Café + yogur griego con avena y plátano",
+        kcal: 380,
+        proteina: 26,
+        ingredientes: ["café", "yogur griego 0%", "avena", "plátano"],
         momento: "desayuno",
       },
       {
@@ -99,17 +93,17 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "mar-comida",
-        nombre: "Ternera salteada al estilo asiático con quinoa, pimientos y salsa de soja",
-        kcal: 650,
-        proteina: 53,
+        nombre: "Alubias blancas estofadas con pavo y pimentón",
+        kcal: 640,
+        proteina: 50,
         ingredientes: [
-          "ternera magra",
-          "quinoa",
-          "pimiento",
+          "alubias blancas",
+          "pechuga de pavo",
+          "pimentón",
           "cebolla",
-          "salsa de soja baja en sal",
-          "jengibre",
-          "aceite de sésamo",
+          "pimiento",
+          "tomate",
+          "aceite de oliva",
         ],
         momento: "comida",
       },
@@ -144,10 +138,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "mie-desayuno",
-        nombre: "Skyr con muesli sin azúcar, fresas y un chorrito de miel",
-        kcal: 390,
-        proteina: 31,
-        ingredientes: ["skyr o queso batido 0%", "muesli sin azúcar", "fresas", "miel"],
+        nombre: "Café con leche + skyr con muesli sin azúcar y fresas",
+        kcal: 370,
+        proteina: 27,
+        ingredientes: ["café", "leche desnatada", "skyr o queso batido 0%", "muesli sin azúcar", "fresas"],
         momento: "desayuno",
       },
       {
@@ -160,10 +154,10 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "mie-comida",
-        nombre: "Merluza a la sidra con patata panadera y judías verdes salteadas con ajo",
-        kcal: 580,
-        proteina: 46,
-        ingredientes: ["merluza", "sidra o vino blanco", "patata", "judías verdes", "ajo", "aceite de oliva"],
+        nombre: "Potaje de garbanzos con bacalao y espinacas",
+        kcal: 600,
+        proteina: 44,
+        ingredientes: ["garbanzos cocidos", "bacalao", "espinacas", "patata", "ajo", "pimentón", "aceite de oliva"],
         momento: "comida",
       },
       {
@@ -191,10 +185,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "jue-desayuno",
-        nombre: "Tortilla francesa con aguacate, tomate y pan integral tostado con ajo",
-        kcal: 450,
-        proteina: 33,
-        ingredientes: ["huevos", "claras de huevo pasteurizadas", "aguacate", "tomate", "pan integral", "ajo"],
+        nombre: "Café + tostada con queso fresco, pavo y tomate",
+        kcal: 380,
+        proteina: 28,
+        ingredientes: ["café", "pan integral", "queso fresco batido 0%", "pechuga de pavo", "tomate"],
         momento: "desayuno",
       },
       {
@@ -207,17 +201,10 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "jue-comida",
-        nombre: "Pollo al curry rojo con leche de coco ligera, arroz basmati y verduras salteadas",
-        kcal: 630,
-        proteina: 54,
-        ingredientes: [
-          "pechuga de pollo",
-          "pasta de curry rojo",
-          "leche de coco light",
-          "arroz basmati",
-          "pimiento",
-          "cebolla",
-        ],
+        nombre: "Guisantes estofados con jamón, zanahoria y huevo poché",
+        kcal: 620,
+        proteina: 44,
+        ingredientes: ["guisantes", "jamón serrano", "zanahoria", "cebolla", "huevos", "patata"],
         momento: "comida",
       },
       {
@@ -245,10 +232,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "vie-desayuno",
-        nombre: "Avena con proteína, cacao puro, plátano y un puñado de avellanas",
-        kcal: 450,
-        proteina: 37,
-        ingredientes: ["avena", "proteína whey", "cacao puro", "plátano", "avellanas"],
+        nombre: "Café con leche + yogur griego con avena, cacao puro y plátano",
+        kcal: 390,
+        proteina: 25,
+        ingredientes: ["café", "leche desnatada", "yogur griego 0%", "avena", "cacao puro", "plátano"],
         momento: "desayuno",
       },
       {
@@ -261,10 +248,10 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "vie-comida",
-        nombre: "Salmón teriyaki al horno con arroz integral y espárragos a la plancha",
-        kcal: 660,
-        proteina: 49,
-        ingredientes: ["salmón", "salsa teriyaki baja en azúcar", "arroz integral", "espárragos", "sésamo"],
+        nombre: "Puchero de garbanzos con pollo, chorizo magro y verduras",
+        kcal: 670,
+        proteina: 53,
+        ingredientes: ["garbanzos cocidos", "pechuga de pollo", "chorizo magro", "patata", "zanahoria", "repollo"],
         momento: "comida",
       },
       {
@@ -299,10 +286,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "sab-desayuno",
-        nombre: "Tostadas integrales con huevos revueltos, aguacate y semillas de sésamo",
-        kcal: 470,
-        proteina: 31,
-        ingredientes: ["pan integral", "huevos", "aguacate", "semillas de sésamo"],
+        nombre: "Café + tostada con huevos revueltos y aguacate",
+        kcal: 400,
+        proteina: 22,
+        ingredientes: ["café", "pan integral", "huevos", "aguacate"],
         momento: "desayuno",
       },
       {
@@ -315,16 +302,10 @@ export const MEAL_PLAN: DayPlan[] = [
       },
       {
         id: "sab-comida",
-        nombre: "Pasta integral al pesto ligero con atún, tomate cherry y queso fresco batido",
+        nombre: "Arroz meloso con pollo, verduras y un toque de azafrán",
         kcal: 630,
-        proteina: 45,
-        ingredientes: [
-          "pasta integral",
-          "pesto ligero",
-          "atún al natural",
-          "tomate cherry",
-          "queso fresco batido 0%",
-        ],
+        proteina: 46,
+        ingredientes: ["arroz", "pechuga de pollo", "pimiento", "judías verdes", "tomate", "ajo", "azafrán"],
         momento: "comida",
       },
       {
@@ -352,10 +333,10 @@ export const MEAL_PLAN: DayPlan[] = [
     meals: [
       {
         id: "dom-desayuno",
-        nombre: "Desayuno proteico habitual (mantén esta comida fija)",
+        nombre: "Café + desayuno proteico habitual (mantén esta comida fija)",
         kcal: 420,
         proteina: 35,
-        ingredientes: ["huevos", "avena", "proteína whey"],
+        ingredientes: ["café", "huevos", "avena", "proteína whey"],
         momento: "desayuno",
       },
       {
@@ -577,6 +558,7 @@ export const EXERCISE_INDEX: Record<string, { nombre: string; emoji: string }> =
 export const SHOPPING_CATEGORIES = [
   "Proteínas",
   "Lácteos",
+  "Legumbres",
   "Carbohidratos",
   "Verduras y fruta",
   "Frutos secos y grasas",
@@ -587,6 +569,7 @@ export const SHOPPING_CATEGORIES = [
 export const CATEGORY_EMOJI: Record<string, string> = {
   "Proteínas": "🍗",
   "Lácteos": "🥛",
+  "Legumbres": "🫘",
   "Carbohidratos": "🌾",
   "Verduras y fruta": "🥦",
   "Frutos secos y grasas": "🥜",
@@ -608,6 +591,9 @@ export const BASE_SHOPPING_LIST: ShoppingItem[] = [
   item("p-atun", "Atún al natural (lata)", "Proteínas"),
   item("p-huevos", "Huevos", "Proteínas"),
   item("p-claras", "Claras de huevo pasteurizadas", "Proteínas"),
+  item("p-chorizo", "Chorizo magro", "Proteínas"),
+  item("p-bacalao", "Bacalao", "Proteínas"),
+  item("p-jamonserrano", "Jamón serrano", "Proteínas"),
   item("l-yogur", "Yogur griego 0%", "Lácteos"),
   item("l-skyr", "Skyr o queso batido 0%", "Lácteos"),
   item("l-requeson", "Requesón", "Lácteos"),
@@ -615,7 +601,12 @@ export const BASE_SHOPPING_LIST: ShoppingItem[] = [
   item("l-quesofresco", "Queso fresco batido 0%", "Lácteos"),
   item("l-feta", "Queso feta", "Lácteos"),
   item("l-parmesano", "Queso parmesano", "Lácteos"),
+  item("leg-lentejas", "Lentejas", "Legumbres"),
+  item("leg-alubias", "Alubias blancas", "Legumbres"),
+  item("leg-garbanzos", "Garbanzos cocidos", "Legumbres"),
+  item("leg-guisantes", "Guisantes", "Legumbres"),
   item("c-avena", "Avena", "Carbohidratos"),
+  item("c-arroz", "Arroz", "Carbohidratos"),
   item("c-arrozintegral", "Arroz integral", "Carbohidratos"),
   item("c-arrozbasmati", "Arroz basmati", "Carbohidratos"),
   item("c-quinoa", "Quinoa", "Carbohidratos"),
@@ -643,9 +634,10 @@ export const BASE_SHOPPING_LIST: ShoppingItem[] = [
   item("v-arandanos", "Arándanos", "Verduras y fruta"),
   item("v-fresas", "Fresas", "Verduras y fruta"),
   item("v-manzana", "Manzana", "Verduras y fruta"),
-  item("v-garbanzos", "Garbanzos cocidos", "Verduras y fruta"),
   item("v-limon", "Limón", "Verduras y fruta"),
   item("v-menta", "Menta", "Verduras y fruta"),
+  item("v-zanahoria", "Zanahoria", "Verduras y fruta"),
+  item("v-repollo", "Repollo", "Verduras y fruta"),
   item("f-nueces", "Nueces", "Frutos secos y grasas"),
   item("f-almendras", "Almendras", "Frutos secos y grasas"),
   item("f-avellanas", "Avellanas", "Frutos secos y grasas"),
@@ -677,4 +669,6 @@ export const BASE_SHOPPING_LIST: ShoppingItem[] = [
   item("o-provenzales", "Hierbas provenzales", "Otros"),
   item("o-oregano", "Orégano", "Otros"),
   item("o-sidra", "Sidra o vino blanco", "Otros"),
+  item("o-pimenton", "Pimentón", "Otros"),
+  item("o-azafran", "Azafrán", "Otros"),
 ];
