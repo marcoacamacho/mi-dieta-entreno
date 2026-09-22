@@ -4,10 +4,16 @@ import { useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
-import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora } from "../planData";
+import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora, HORA_DESAYUNO, HORA_COMIDA } from "../planData";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
+
+function horaProgramada(momento: string, dia: DayKey): string | undefined {
+  if (momento === "desayuno") return HORA_DESAYUNO[dia];
+  if (momento === "comida") return HORA_COMIDA;
+  return undefined;
+}
 
 const HERO_STYLES = {
   entreno: {
@@ -283,7 +289,10 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                       className="h-4 w-4 shrink-0 accent-emerald-500"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">{info.label}</div>
+                      <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+                        {info.label}
+                        {horaProgramada(meal.momento, dayKey) && ` · ${horaProgramada(meal.momento, dayKey)}`}
+                      </div>
                       <div className="text-sm text-slate-200">{meal.nombre}</div>
                       {meal.kcal > 0 && (
                         <div className="text-xs text-slate-500">
@@ -315,10 +324,12 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
           <ul className="space-y-1.5">
             {mananaPlan.meals.map((meal) => {
               const info = MOMENTO_INFO[meal.momento];
+              const hora = horaProgramada(meal.momento, mananaKey);
               return (
                 <li key={meal.id} className="flex items-center gap-2.5 text-sm text-slate-400">
                   <span className="text-base">{info.emoji}</span>
                   <span className="min-w-0 flex-1 truncate">{meal.nombre}</span>
+                  {hora && <span className="shrink-0 text-xs text-slate-600">{hora}</span>}
                   {meal.kcal > 0 && <span className="shrink-0 text-xs text-slate-600">{meal.kcal} kcal</span>}
                 </li>
               );

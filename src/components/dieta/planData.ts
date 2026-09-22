@@ -1,4 +1,4 @@
-import { DayPlan, WorkoutDay, ShoppingItem, Momento } from "./types";
+import { DayPlan, WorkoutDay, ShoppingItem, Momento, DayKey } from "./types";
 
 // Plan orientativo ~1970-2150 kcal / ~180-190 g proteína al día (referencia
 // para una persona activa en fase de definición, aprox. 80-90 kg). Ajusta
@@ -12,6 +12,20 @@ export const MOMENTO_INFO: Record<Momento, { label: string; emoji: string }> = {
   cena: { label: "Cena", emoji: "🌙" },
   libre: { label: "Libre", emoji: "🎉" },
 };
+
+/** Tu horario real de comidas, para mostrarlo junto al menú. El desayuno
+ * es más temprano los días de entreno; la comida siempre a la misma hora. */
+export const HORA_DESAYUNO: Record<DayKey, string> = {
+  lunes: "7:00",
+  martes: "7:00",
+  miercoles: "8:00",
+  jueves: "7:00",
+  viernes: "7:00",
+  sabado: "8:00",
+  domingo: "8:00",
+};
+
+export const HORA_COMIDA = "14:00-14:30";
 
 /** A qué momento del día encaja una hora tipo "HH:MM", con los horarios
  * habituales en España (comida a mediodía, cena por la noche). */
