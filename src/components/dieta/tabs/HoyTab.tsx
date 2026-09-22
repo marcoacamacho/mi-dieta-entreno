@@ -5,7 +5,7 @@ import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "..
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
 import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora, HORA_DESAYUNO, HORA_COMIDA } from "../planData";
-import { FOOD_DATABASE } from "../foodDatabase";
+import { FOOD_DATABASE, AlimentoRef } from "../foodDatabase";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
@@ -60,23 +60,56 @@ function ultimaVez(logs: Record<string, DailyLog>, exId: string, hoy: string) {
   return mejorEntry ? { fecha: mejorFecha, ...mejorEntry } : null;
 }
 
+interface IngredienteAñadido extends AlimentoRef {
+  id: string;
+  gramos: number;
+}
+
+function buscarAlimento(nombre: string): AlimentoRef | undefined {
+  return FOOD_DATABASE.find((f) => f.nombre.toLowerCase() === nombre.trim().toLowerCase());
+}
+
+function kcalDe(i: AlimentoRef, gramos: number): number {
+  return Math.round((i.kcalPor100g * gramos) / 100);
+}
+
+function protDe(i: AlimentoRef, gramos: number): number {
+  return Math.round((i.proteinaPor100g * gramos) / 100);
+}
+
 export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, updateLog, targets, diaPesaje }: Props) {
   const [extraNombre, setExtraNombre] = useState("");
-  const [extraGramos, setExtraGramos] = useState("");
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
   const [extraHora, setExtraHora] = useState(() => new Date().toTimeString().slice(0, 5));
   const [entrenoAbierto, setEntrenoAbierto] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(true);
 
-  const alimentoCoincidente = useMemo(
-    () => FOOD_DATABASE.find((f) => f.nombre.toLowerCase() === extraNombre.trim().toLowerCase()),
-    [extraNombre]
+  const [ingredientes, setIngredientes] = useState<IngredienteAñadido[]>([]);
+  const [ingNombre, setIngNombre] = useState("");
+  const [ingGramos, setIngGramos] = useState("");
+
+  const totalIngKcal = useMemo(
+    () => ingredientes.reduce((acc, i) => acc + kcalDe(i, i.gramos), 0),
+    [ingredientes]
   );
-  const gramos = Number(extraGramos) || 0;
-  const kcalCalculado = alimentoCoincidente && gramos > 0 ? Math.round((alimentoCoincidente.kcalPor100g * gramos) / 100) : null;
-  const protCalculado =
-    alimentoCoincidente && gramos > 0 ? Math.round((alimentoCoincidente.proteinaPor100g * gramos) / 100) : null;
+  const totalIngProt = useMemo(
+    () => ingredientes.reduce((acc, i) => acc + protDe(i, i.gramos), 0),
+    [ingredientes]
+  );
+
+  function addIngrediente() {
+    const alimento = buscarAlimento(ingNombre);
+    const gramos = Number(ingGramos);
+    if (!alimento || !gramos) return;
+    setIngredientes((prev) => [...prev, { ...alimento, id: `${Date.now()}`, gramos }]);
+    setIngNombre("");
+    setIngGramos("");
+  }
+
+  function removeIngrediente(id: string) {
+    setIngredientes((prev) => prev.filter((i) => i.id !== id));
+  }
 
   const dayKey = dayOfWeekKey(date);
   const diasParaPesaje = diasHastaProximo(dayKey, diaPesaje);
@@ -113,8 +146,8 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
   }
 
   function addExtra() {
-    const kcal = kcalCalculado ?? Number(extraKcal);
-    const proteina = protCalculado ?? (Number(extraProt) || 0);
+    const kcal = ingredientes.length > 0 ? totalIngKcal : Number(extraKcal);
+    const proteina = ingredientes.length > 0 ? totalIngProt : (Number(extraProt) || 0);
     if (!extraNombre.trim() || !kcal) return;
     const nueva: ExtraFood = {
       id: `${Date.now()}`,
@@ -126,7 +159,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
     };
     updateLog((prev) => ({ ...prev, extras: [...prev.extras, nueva] }));
     setExtraNombre("");
-    setExtraGramos("");
+    setIngredientes([]);
     setExtraKcal("");
     setExtraProt("");
   }
@@ -362,7 +395,6 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
             value={extraNombre}
             onChange={(e) => setExtraNombre(e.target.value)}
             placeholder="Qué has comido"
-            list="alimentos-conocidos"
             className="w-full min-w-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
           />
           <datalist id="alimentos-conocidos">
@@ -370,47 +402,90 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
               <option key={f.nombre} value={f.nombre} />
             ))}
           </datalist>
-          <div className="flex gap-2">
-            <input
-              value={extraHora}
-              onChange={(e) => setExtraHora(e.target.value)}
-              type="time"
-              className="w-[6.5rem] shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
-            />
-            {alimentoCoincidente ? (
+          <input
+            value={extraHora}
+            onChange={(e) => setExtraHora(e.target.value)}
+            type="time"
+            className="w-[6.5rem] shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+          />
+
+          <div className="rounded-lg border border-white/10 bg-white/[0.02] p-2.5">
+            <div className="mb-2 text-xs font-semibold text-slate-400">
+              Ingredientes (opcional, para calcular las kcal)
+            </div>
+            <div className="flex gap-2">
               <input
-                value={extraGramos}
-                onChange={(e) => setExtraGramos(e.target.value)}
-                type="number"
-                placeholder="gramos"
-                autoFocus
-                className="w-0 min-w-0 flex-1 rounded-lg border border-lime-400/40 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+                value={ingNombre}
+                onChange={(e) => setIngNombre(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addIngrediente()}
+                placeholder="Alimento"
+                list="alimentos-conocidos"
+                className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
               />
-            ) : (
+              <input
+                value={ingGramos}
+                onChange={(e) => setIngGramos(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && addIngrediente()}
+                type="number"
+                placeholder="g"
+                className="w-16 shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+              />
+              <button
+                onClick={addIngrediente}
+                disabled={!buscarAlimento(ingNombre) || !Number(ingGramos)}
+                className="shrink-0 rounded-lg bg-lime-500/20 px-3 text-sm font-semibold text-lime-300 transition-colors hover:bg-lime-500/30 disabled:opacity-30"
+              >
+                +
+              </button>
+            </div>
+            {ingNombre && !buscarAlimento(ingNombre) && (
+              <p className="mt-1.5 text-xs text-amber-300/80">
+                No encuentro &quot;{ingNombre}&quot; en la base de alimentos, elige una sugerencia de la lista.
+              </p>
+            )}
+            {ingredientes.length > 0 && (
               <>
-                <input
-                  value={extraKcal}
-                  onChange={(e) => setExtraKcal(e.target.value)}
-                  type="number"
-                  placeholder="kcal"
-                  className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
-                />
-                <input
-                  value={extraProt}
-                  onChange={(e) => setExtraProt(e.target.value)}
-                  type="number"
-                  placeholder="prot g"
-                  className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
-                />
+                <ul className="mt-2 space-y-1">
+                  {ingredientes.map((i) => (
+                    <li key={i.id} className="flex items-center justify-between gap-2 text-xs text-slate-400">
+                      <span className="min-w-0 truncate">
+                        {i.nombre} · {i.gramos}g
+                      </span>
+                      <span className="flex shrink-0 items-center gap-2">
+                        <span className="text-slate-300">
+                          {kcalDe(i, i.gramos)} kcal · {protDe(i, i.gramos)}g
+                        </span>
+                        <button onClick={() => removeIngrediente(i.id)} className="text-rose-400 hover:text-rose-300">
+                          ✕
+                        </button>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-2 border-t border-white/10 pt-2 text-xs font-semibold text-lime-300">
+                  Total: {totalIngKcal} kcal · {totalIngProt}g proteína
+                </div>
               </>
             )}
           </div>
-          {alimentoCoincidente && (
-            <p className="text-xs text-lime-300">
-              🔎 {alimentoCoincidente.nombre}: {alimentoCoincidente.kcalPor100g} kcal / {alimentoCoincidente.proteinaPor100g}g
-              proteína por 100g
-              {gramos > 0 && ` → ${kcalCalculado} kcal · ${protCalculado}g proteína calculado`}
-            </p>
+
+          {ingredientes.length === 0 && (
+            <div className="flex gap-2">
+              <input
+                value={extraKcal}
+                onChange={(e) => setExtraKcal(e.target.value)}
+                type="number"
+                placeholder="kcal"
+                className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+              />
+              <input
+                value={extraProt}
+                onChange={(e) => setExtraProt(e.target.value)}
+                type="number"
+                placeholder="prot g"
+                className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+              />
+            </div>
           )}
           {extraHora && (
             <p className="text-xs text-slate-500">
