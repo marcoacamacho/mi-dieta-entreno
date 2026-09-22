@@ -5,7 +5,7 @@ import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "..
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
 import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora, HORA_DESAYUNO, HORA_COMIDA } from "../planData";
-import { FOOD_DATABASE, AlimentoRef } from "../foodDatabase";
+import { FOOD_DATABASE, AlimentoRef, buscarAlimento } from "../foodDatabase";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
@@ -65,8 +65,23 @@ interface IngredienteAñadido extends AlimentoRef {
   gramos: number;
 }
 
-function buscarAlimento(nombre: string): AlimentoRef | undefined {
-  return FOOD_DATABASE.find((f) => f.nombre.toLowerCase() === nombre.trim().toLowerCase());
+/** Interpreta una línea tipo "pollo 150g", "150g pollo" o "pollo, 150". */
+function parseLineaIngrediente(linea: string): { nombre: string; gramos: number } | null {
+  const t = linea.trim();
+  if (!t) return null;
+  let m = t.match(/^(.+?)[\s,]+(\d+(?:[.,]\d+)?)\s*(?:g|gr|gramos)?\.?$/i);
+  if (m) {
+    const gramos = Number(m[2].replace(",", "."));
+    const nombre = m[1].trim();
+    if (nombre && gramos > 0) return { nombre, gramos };
+  }
+  m = t.match(/^(\d+(?:[.,]\d+)?)\s*(?:g|gr|gramos)?\.?[\s,]+(.+)$/i);
+  if (m) {
+    const gramos = Number(m[1].replace(",", "."));
+    const nombre = m[2].trim();
+    if (nombre && gramos > 0) return { nombre, gramos };
+  }
+  return null;
 }
 
 function kcalDe(i: AlimentoRef, gramos: number): number {
@@ -88,6 +103,9 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
   const [ingredientes, setIngredientes] = useState<IngredienteAñadido[]>([]);
   const [ingNombre, setIngNombre] = useState("");
   const [ingGramos, setIngGramos] = useState("");
+  const [bulkAbierto, setBulkAbierto] = useState(false);
+  const [bulkTexto, setBulkTexto] = useState("");
+  const [bulkNoEncontrados, setBulkNoEncontrados] = useState<string[]>([]);
 
   const totalIngKcal = useMemo(
     () => ingredientes.reduce((acc, i) => acc + kcalDe(i, i.gramos), 0),
@@ -109,6 +127,24 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
 
   function removeIngrediente(id: string) {
     setIngredientes((prev) => prev.filter((i) => i.id !== id));
+  }
+
+  function addBulk() {
+    const lineas = bulkTexto.split("\n").map((l) => l.trim()).filter(Boolean);
+    const nuevos: IngredienteAñadido[] = [];
+    const noEncontrados: string[] = [];
+    lineas.forEach((linea, i) => {
+      const parsed = parseLineaIngrediente(linea);
+      const alimento = parsed ? buscarAlimento(parsed.nombre) : undefined;
+      if (parsed && alimento) {
+        nuevos.push({ ...alimento, id: `${Date.now()}-${i}`, gramos: parsed.gramos });
+      } else {
+        noEncontrados.push(linea);
+      }
+    });
+    if (nuevos.length > 0) setIngredientes((prev) => [...prev, ...nuevos]);
+    setBulkNoEncontrados(noEncontrados);
+    setBulkTexto(noEncontrados.join("\n"));
   }
 
   const dayKey = dayOfWeekKey(date);
@@ -162,6 +198,8 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
     setIngredientes([]);
     setExtraKcal("");
     setExtraProt("");
+    setBulkTexto("");
+    setBulkNoEncontrados([]);
   }
 
   function removeExtra(id: string) {
@@ -466,6 +504,37 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
                   Total: {totalIngKcal} kcal · {totalIngProt}g proteína
                 </div>
               </>
+            )}
+
+            <button
+              onClick={() => setBulkAbierto((v) => !v)}
+              className="mt-2.5 text-xs text-lime-300 hover:text-lime-200"
+            >
+              {bulkAbierto ? "▾" : "▸"} O pega varios ingredientes a la vez
+            </button>
+            {bulkAbierto && (
+              <div className="mt-2">
+                <textarea
+                  value={bulkTexto}
+                  onChange={(e) => setBulkTexto(e.target.value)}
+                  placeholder={"Uno por línea, así:\npollo 150g\nqueso manchego 30g\naceitunas 20g"}
+                  rows={4}
+                  className="w-full min-w-0 resize-none rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+                />
+                <button
+                  onClick={addBulk}
+                  disabled={!bulkTexto.trim()}
+                  className="mt-1.5 w-full rounded-lg bg-lime-500/20 px-3 py-1.5 text-sm font-semibold text-lime-300 transition-colors hover:bg-lime-500/30 disabled:opacity-30"
+                >
+                  Añadir todos
+                </button>
+                {bulkNoEncontrados.length > 0 && (
+                  <p className="mt-1.5 text-xs text-amber-300/80">
+                    No he encontrado {bulkNoEncontrados.length === 1 ? "esta línea" : "estas líneas"} — revisa el
+                    nombre o el formato (alimento + gramos) y vuelve a intentarlo.
+                  </p>
+                )}
+              </div>
             )}
           </div>
 
