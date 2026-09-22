@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
-import { MOMENTO_INFO, MEAL_PLAN } from "../planData";
+import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora } from "../planData";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
@@ -39,6 +39,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
   const [extraNombre, setExtraNombre] = useState("");
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
+  const [extraHora, setExtraHora] = useState(() => new Date().toTimeString().slice(0, 5));
   const [mostrarPesoManual, setMostrarPesoManual] = useState(false);
   const [entrenoAbierto, setEntrenoAbierto] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(true);
@@ -81,7 +82,14 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
     const kcal = Number(extraKcal);
     const proteina = Number(extraProt) || 0;
     if (!extraNombre.trim() || !kcal) return;
-    const nueva: ExtraFood = { id: `${Date.now()}`, nombre: extraNombre.trim(), kcal, proteina };
+    const nueva: ExtraFood = {
+      id: `${Date.now()}`,
+      nombre: extraNombre.trim(),
+      kcal,
+      proteina,
+      hora: extraHora || undefined,
+      momento: extraHora ? momentoDesdeHora(extraHora) : undefined,
+    };
     updateLog((prev) => ({ ...prev, extras: [...prev.extras, nueva] }));
     setExtraNombre("");
     setExtraKcal("");
@@ -335,6 +343,12 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
           />
           <div className="flex gap-2">
             <input
+              value={extraHora}
+              onChange={(e) => setExtraHora(e.target.value)}
+              type="time"
+              className="w-[6.5rem] shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+            />
+            <input
               value={extraKcal}
               onChange={(e) => setExtraKcal(e.target.value)}
               type="number"
@@ -348,24 +362,36 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
               placeholder="prot g"
               className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
-            <button
-              onClick={addExtra}
-              className="btn-brand shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium"
-            >
-              Añadir
-            </button>
           </div>
+          {extraHora && (
+            <p className="text-xs text-slate-500">
+              {MOMENTO_INFO[momentoDesdeHora(extraHora)].emoji} Se contará como{" "}
+              {MOMENTO_INFO[momentoDesdeHora(extraHora)].label.toLowerCase()}
+            </p>
+          )}
+          <button onClick={addExtra} className="btn-brand w-full rounded-lg px-3 py-1.5 text-sm font-medium">
+            Añadir
+          </button>
         </div>
         {log.extras.length > 0 && (
           <ul className="space-y-1.5">
             {log.extras.map((e) => (
-              <li key={e.id} className="flex items-center justify-between rounded-lg bg-white/[0.03] px-3 py-2 text-sm">
-                <span className="text-slate-300">
-                  {e.nombre} <span className="text-slate-500">· {e.kcal} kcal · {e.proteina}g prot</span>
-                </span>
+              <li key={e.id} className="flex items-center justify-between gap-2 rounded-lg bg-white/[0.03] px-3 py-2 text-sm">
+                <div className="min-w-0">
+                  <span className="text-slate-300">{e.nombre}</span>
+                  <div className="text-xs text-slate-500">
+                    {e.momento && (
+                      <>
+                        {MOMENTO_INFO[e.momento].emoji} {MOMENTO_INFO[e.momento].label}
+                        {e.hora && ` · ${e.hora}`} ·{" "}
+                      </>
+                    )}
+                    {e.kcal} kcal · {e.proteina}g prot
+                  </div>
+                </div>
                 <button
                   onClick={() => removeExtra(e.id)}
-                  className="text-rose-400 transition-transform hover:text-rose-300 active:scale-90 text-xs"
+                  className="shrink-0 text-rose-400 transition-transform hover:text-rose-300 active:scale-90 text-xs"
                 >
                   Quitar
                 </button>

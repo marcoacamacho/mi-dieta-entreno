@@ -13,6 +13,18 @@ export const MOMENTO_INFO: Record<Momento, { label: string; emoji: string }> = {
   libre: { label: "Libre", emoji: "🎉" },
 };
 
+/** A qué momento del día encaja una hora tipo "HH:MM", con los horarios
+ * habituales en España (comida a mediodía, cena por la noche). */
+export function momentoDesdeHora(hora: string): Momento {
+  const h = parseInt(hora.split(":")[0] ?? "", 10);
+  if (Number.isNaN(h)) return "comida";
+  if (h < 11) return "desayuno";
+  if (h < 13) return "media_manana";
+  if (h < 17) return "comida";
+  if (h < 20) return "merienda";
+  return "cena";
+}
+
 export const MEAL_PLAN: DayPlan[] = [
   {
     day: "lunes",

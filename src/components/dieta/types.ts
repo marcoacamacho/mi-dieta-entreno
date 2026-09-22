@@ -64,6 +64,8 @@ export interface ExtraFood {
   nombre: string;
   kcal: number;
   proteina: number;
+  hora?: string;
+  momento?: Momento;
 }
 
 export interface ExerciseLogEntry {
