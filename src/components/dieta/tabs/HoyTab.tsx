@@ -64,7 +64,6 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
   const [extraHora, setExtraHora] = useState(() => new Date().toTimeString().slice(0, 5));
-  const [mostrarPesoManual, setMostrarPesoManual] = useState(false);
   const [entrenoAbierto, setEntrenoAbierto] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(true);
 
@@ -209,55 +208,38 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
         </div>
 
         <div className="mt-4">
-          {esDiaPesaje ? (
-            <div className="rounded-xl border border-lime-400/30 bg-lime-500/10 p-3">
+          {esDiaPesaje && (
+            <div className="mb-2 rounded-xl border border-lime-400/30 bg-lime-500/10 p-3">
               <div className="text-sm font-semibold text-lime-200">📅 ¡Hoy toca pesarte!</div>
               <p className="mt-0.5 text-xs text-slate-400">
                 Pésate en ayunas, recién levantado, y anota el resultado.
               </p>
-              <div className="mt-2 flex items-center gap-2">
-                <input
-                  type="number"
-                  step="0.1"
-                  value={log.pesoCorporal ?? ""}
-                  onChange={(e) => setPesoCorporal(e.target.value)}
-                  placeholder="kg"
-                  autoFocus
-                  className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
-                />
-              </div>
             </div>
-          ) : mananaEsPesaje ? (
-            <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-3">
+          )}
+          {!esDiaPesaje && mananaEsPesaje && (
+            <div className="mb-2 rounded-xl border border-amber-400/30 bg-amber-500/10 p-3">
               <div className="text-sm font-semibold text-amber-200">⏰ Mañana toca pesarte</div>
               <p className="mt-0.5 text-xs text-slate-400">
                 Descansa bien esta noche y pésate mañana en ayunas para que el dato sea fiable.
               </p>
             </div>
-          ) : (
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>
-                ⚖️ Próximo pesaje: {DAY_LABELS[diaPesaje]} (en {diasParaPesaje} día{diasParaPesaje === 1 ? "" : "s"})
-              </span>
-              {!mostrarPesoManual && (
-                <button onClick={() => setMostrarPesoManual(true)} className="text-lime-300 hover:text-lime-200">
-                  Registrar de todas formas
-                </button>
-              )}
-            </div>
           )}
-          {!esDiaPesaje && !mananaEsPesaje && mostrarPesoManual && (
-            <div className="mt-2 flex items-center gap-2">
-              <input
-                type="number"
-                step="0.1"
-                value={log.pesoCorporal ?? ""}
-                onChange={(e) => setPesoCorporal(e.target.value)}
-                placeholder="kg"
-                className="w-24 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
-              />
-            </div>
-          )}
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs text-slate-500">
+              {esDiaPesaje
+                ? "⚖️ Tu peso de hoy"
+                : `⚖️ Próximo pesaje: ${DAY_LABELS[diaPesaje]} (en ${diasParaPesaje} día${diasParaPesaje === 1 ? "" : "s"})`}
+            </span>
+            <input
+              type="number"
+              step="0.1"
+              value={log.pesoCorporal ?? ""}
+              onChange={(e) => setPesoCorporal(e.target.value)}
+              placeholder="kg"
+              autoFocus={esDiaPesaje}
+              className="w-24 shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-sm text-white outline-none focus:border-lime-400"
+            />
+          </div>
         </div>
       </Card>
 
