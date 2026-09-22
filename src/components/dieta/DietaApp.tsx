@@ -98,6 +98,7 @@ export default function DietaApp() {
           dayPlan={dayPlan}
           workoutDay={workoutDay}
           log={log}
+          logs={logs}
           updateLog={updateLog}
           targets={targets}
           diaPesaje={profile.diaPesaje}

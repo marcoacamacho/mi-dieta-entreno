@@ -26,7 +26,7 @@ const HERO_STYLES = {
   },
   libre: {
     gradient: "from-amber-500/20 via-pink-500/15 to-transparent",
-    frase: "🎉 Día libre de dieta — disfruta sin culpa, mañana seguimos.",
+    frase: "🔁 Descarga dietética — sube algo los carbohidratos, mantén la proteína y disfruta sin culpa; mañana seguimos.",
   },
 };
 
@@ -36,12 +36,30 @@ interface Props {
   dayPlan: DayPlan;
   workoutDay: WorkoutDay | undefined;
   log: DailyLog;
+  logs: Record<string, DailyLog>;
   updateLog: (updater: (prev: DailyLog) => DailyLog) => void;
   targets: Targets;
   diaPesaje: DayKey;
 }
 
-export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, updateLog, targets, diaPesaje }: Props) {
+/** Última vez (antes de hoy) que se registró peso para este ejercicio, para
+ * poder mostrar una referencia de sobrecarga progresiva junto al input. */
+function ultimaVez(logs: Record<string, DailyLog>, exId: string, hoy: string) {
+  let mejorFecha = "";
+  let mejorEntry: { peso?: number; reps?: number } | null = null;
+  for (const [fecha, log] of Object.entries(logs)) {
+    if (fecha >= hoy) continue;
+    const entry = log.ejercicios[exId];
+    if (entry?.peso === undefined) continue;
+    if (fecha > mejorFecha) {
+      mejorFecha = fecha;
+      mejorEntry = entry;
+    }
+  }
+  return mejorEntry ? { fecha: mejorFecha, ...mejorEntry } : null;
+}
+
+export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, updateLog, targets, diaPesaje }: Props) {
   const [extraNombre, setExtraNombre] = useState("");
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
@@ -146,7 +164,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
             <div className="mt-1 flex gap-2">
               {dayPlan.entreno && <Badge tone="indigo">Día de entreno</Badge>}
               {!dayPlan.entreno && !dayPlan.diaLibreDieta && <Badge tone="slate">Descanso de entreno</Badge>}
-              {dayPlan.diaLibreDieta && <Badge tone="amber">Día libre de dieta</Badge>}
+              {dayPlan.diaLibreDieta && <Badge tone="amber">Descarga dietética</Badge>}
             </div>
           </div>
           <button
@@ -422,9 +440,15 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
           />
           <CollapsibleBody open={entrenoAbierto}>
             <div className="pt-1">
+              <div className="mb-3 rounded-xl border border-sky-400/30 bg-sky-500/10 p-2.5 text-xs text-sky-200">
+                🔥 <strong>Calienta antes de empezar:</strong> 5 min de cardio suave + 1-2 series ligeras
+                del primer ejercicio antes de ir a la carga de trabajo. RIR = repeticiones en reserva:
+                deja 1-2 reps en el depósito en la mayoría de series, no llegues siempre al fallo.
+              </div>
               <ul className="space-y-2">
                 {workoutDay.ejercicios.map((ex) => {
                   const entry = log.ejercicios[ex.id] ?? {};
+                  const previa = ultimaVez(logs, ex.id, date);
                   return (
                     <li key={ex.id} className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-2.5">
                       <div className="flex items-start gap-2.5">
@@ -433,7 +457,9 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                         </span>
                         <div className="min-w-0 flex-1">
                           <div className="text-sm text-slate-200">{ex.nombre}</div>
-                          <div className="text-xs text-slate-500">{ex.pauta}</div>
+                          <div className="text-xs text-slate-500">
+                            {ex.pauta} · descanso {ex.descanso}
+                          </div>
                           <div className="mt-1 text-xs italic text-slate-500">{ex.comoHacerlo}</div>
                           <a
                             href={youtubeSearchUrl(`${ex.nombre} técnica ejercicio`)}
@@ -445,6 +471,12 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, update
                           </a>
                         </div>
                       </div>
+                      {previa && (
+                        <div className="mt-2 text-xs text-sky-300">
+                          📈 Última vez: {previa.peso}kg{previa.reps ? ` × ${previa.reps} reps` : ""} — intenta
+                          superarlo hoy (más peso, más reps o una serie más).
+                        </div>
+                      )}
                       <div className="mt-2.5 flex gap-2">
                         <input
                           type="number"

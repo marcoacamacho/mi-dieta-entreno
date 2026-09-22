@@ -8,10 +8,15 @@ const ACTIVITY_FACTOR: Record<Profile["actividad"], number> = {
   muy_activo: 1.9,
 };
 
-const GOAL_ADJUST: Record<Profile["objetivo"], number> = {
-  definir: 0.8, // déficit ~20%
-  mantener: 1,
-  recomposicion: 0.9, // déficit ligero ~10%
+// Déficit calibrado en vez de un porcentaje fijo para todos: se limita al
+// menor entre un % del gasto y un tope absoluto de kcal/día (enfoque de
+// entrenadores basados en evidencia tipo Helms/Trexler), y nunca se baja
+// del metabolismo basal, para que el déficit sea sostenible y no agresivo
+// en personas con TDEE alto ni excesivo en personas con TDEE bajo.
+const GOAL_DEFICIT: Record<Profile["objetivo"], { pct: number; capKcal: number }> = {
+  definir: { pct: 0.2, capKcal: 600 },
+  recomposicion: { pct: 0.1, capKcal: 300 },
+  mantener: { pct: 0, capKcal: 0 },
 };
 
 export interface Targets {
@@ -29,7 +34,9 @@ export function calcularObjetivos(p: Profile): Targets {
       : 10 * p.peso + 6.25 * p.altura - 5 * p.edad - 161;
 
   const tdee = bmr * ACTIVITY_FACTOR[p.actividad];
-  const kcal = Math.round(tdee * GOAL_ADJUST[p.objetivo]);
+  const { pct, capKcal } = GOAL_DEFICIT[p.objetivo];
+  const deficit = Math.min(tdee * pct, capKcal);
+  const kcal = Math.round(Math.max(tdee - deficit, bmr));
   const proteina = Math.round(p.peso * 2); // 2 g/kg para preservar músculo en déficit
   const grasa = Math.round((kcal * 0.25) / 9);
   const kcalRestantes = kcal - proteina * 4 - grasa * 9;

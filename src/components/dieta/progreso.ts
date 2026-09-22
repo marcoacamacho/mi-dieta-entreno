@@ -289,6 +289,34 @@ export function calcularResumenSemanal(logs: Record<string, DailyLog>): ResumenS
   };
 }
 
+/** Semanas consecutivas (ya cerradas, sin contar la actual) en las que se
+ * completó al menos el 75% de los entrenos planificados. Entrenadores
+ * basados en evidencia recomiendan una semana de descarga (menos volumen e
+ * intensidad) cada 4-8 semanas de entreno duro y constante para seguir
+ * progresando y evitar el sobreentrenamiento. */
+export function calcularRachaSemanasEntrenando(logs: Record<string, DailyLog>): number {
+  const hoy = todayISO();
+  const idxHoy = DAY_KEYS.indexOf(dayOfWeekKey(hoy));
+  const lunesActual = addDays(hoy, -idxHoy);
+  let lunes = addDays(lunesActual, -7);
+  let racha = 0;
+  for (let semana = 0; semana < 20; semana++) {
+    let completados = 0;
+    let planificados = 0;
+    for (let i = 0; i < 7; i++) {
+      const fecha = addDays(lunes, i);
+      const workoutDay = WORKOUT_PLAN.find((d) => d.day === dayOfWeekKey(fecha));
+      if (!workoutDay) continue;
+      planificados++;
+      if (tieneEntrenoRegistrado(logs[fecha])) completados++;
+    }
+    if (planificados === 0 || completados < Math.ceil(planificados * 0.75)) break;
+    racha++;
+    lunes = addDays(lunes, -7);
+  }
+  return racha;
+}
+
 export interface EntrenoReciente {
   fecha: string;
   diaLabel: string;

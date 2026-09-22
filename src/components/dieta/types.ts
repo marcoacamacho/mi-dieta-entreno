@@ -49,6 +49,7 @@ export interface Exercise {
   id: string;
   nombre: string;
   pauta: string;
+  descanso: string;
   emoji: string;
   comoHacerlo: string;
 }

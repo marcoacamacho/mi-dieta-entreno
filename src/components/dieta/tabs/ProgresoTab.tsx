@@ -10,7 +10,13 @@ import {
 } from "recharts";
 import { DailyLog, Profile } from "../types";
 import { Targets } from "../calc";
-import { calcularResumenProgreso, calcularResumenSemanal, calcularEntrenosRecientes, EstadoProgreso } from "../progreso";
+import {
+  calcularResumenProgreso,
+  calcularResumenSemanal,
+  calcularEntrenosRecientes,
+  calcularRachaSemanasEntrenando,
+  EstadoProgreso,
+} from "../progreso";
 import { Card, SectionTitle, ProgressBar } from "../ui";
 
 interface Props {
@@ -46,6 +52,7 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
   const r = calcularResumenProgreso(logs, profile, targets);
   const semana = calcularResumenSemanal(logs);
   const recientes = calcularEntrenosRecientes(logs);
+  const rachaSemanas = calcularRachaSemanasEntrenando(logs);
   const style = ESTADO_STYLE[r.estado];
 
   return (
@@ -55,6 +62,18 @@ export default function ProgresoTab({ logs, profile, targets }: Props) {
         <div className="mt-1 text-base font-bold text-white">{style.titulo}</div>
         <p className="mt-2 text-sm text-slate-200">{r.frase}</p>
       </div>
+
+      {rachaSemanas >= 6 && (
+        <Card className="border-amber-400/30 bg-amber-500/10">
+          <SectionTitle>🔋 Toca semana de descarga</SectionTitle>
+          <p className="text-sm text-slate-300">
+            Llevas {rachaSemanas} semanas seguidas entrenando de forma constante. Para seguir
+            progresando sin estancarte, dedica la próxima semana a una descarga: reduce el peso o
+            las series a la mitad, mantén la técnica y deja que el cuerpo recupere antes de volver
+            a apretar.
+          </p>
+        </Card>
+      )}
 
       <Card>
         <SectionTitle>📅 Esta semana</SectionTitle>

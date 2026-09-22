@@ -183,6 +183,43 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
       </Card>
 
       <Card>
+        <SectionTitle>🧭 Pilares además de la dieta y el entreno</SectionTitle>
+        <ul className="space-y-2.5 text-sm text-slate-300">
+          <li className="flex gap-2">
+            <span className="shrink-0">😴</span>
+            <span>
+              <strong className="text-slate-200">Sueño:</strong> 7-9h por noche. Es cuando más se
+              recupera el músculo y se regulan las hormonas del hambre — dormir poco sabotea
+              cualquier dieta.
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">🚶</span>
+            <span>
+              <strong className="text-slate-200">Pasos / NEAT:</strong> apunta a 8.000-10.000
+              pasos al día. El movimiento fuera del gimnasio quema más calorías de lo que parece y
+              hace el déficit mucho más sostenible.
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">💧</span>
+            <span>
+              <strong className="text-slate-200">Hidratación:</strong> 30-35ml por kg de peso al
+              día como referencia, más si entrenas fuerte o hace calor.
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">🧘</span>
+            <span>
+              <strong className="text-slate-200">Estrés:</strong> el estrés crónico eleva el
+              cortisol y dificulta perder grasa y recuperar del entreno. Busca 10 min al día para
+              desconectar (paseo, respiración, lo que te funcione).
+            </span>
+          </li>
+        </ul>
+      </Card>
+
+      <Card>
         <SectionTitle>Evolución de tu peso corporal</SectionTitle>
         {pesoData.length < 2 ? (
           <p className="text-xs text-slate-500">
