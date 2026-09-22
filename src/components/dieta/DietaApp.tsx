@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import { DailyLog, Profile, ShoppingItem } from "./types";
 import { MEAL_PLAN, WORKOUT_PLAN } from "./planData";
 import { todayISO, dayOfWeekKey } from "./dateUtils";
 import { calcularObjetivos, DEFAULT_PROFILE } from "./calc";
+import { pullRemote, pushRemote, SyncPayload } from "./sync";
 import { IconHoy, IconProgreso, IconCompra, IconRecetas, IconSuplementos, IconPerfil } from "./icons";
 import HoyTab from "./tabs/HoyTab";
 import ProgresoTab from "./tabs/ProgresoTab";
@@ -51,6 +52,91 @@ export default function DietaApp() {
     {}
   );
   const [shoppingCustom, setShoppingCustomRaw] = useLocalStorage<ShoppingItem[]>("compra-extra", []);
+
+  const [syncPin, setSyncPin] = useLocalStorage<string>("sync-pin", "");
+  const [syncStatus, setSyncStatus] = useState<"idle" | "syncing" | "ok" | "error">("idle");
+  const [syncError, setSyncError] = useState("");
+  const [lastSyncAt, setLastSyncAt] = useState<number | null>(null);
+  const lastLocalChangeRef = useRef(0);
+  const suppressPushRef = useRef(false);
+  const pulledOnceRef = useRef(false);
+
+  const aplicarRemoto = useCallback(
+    (remote: SyncPayload) => {
+      suppressPushRef.current = true;
+      setLogs(remote.logs ?? {});
+      setProfileRaw(remote.profile ?? DEFAULT_PROFILE);
+      setShoppingChecked(remote.shoppingChecked ?? {});
+      setShoppingCustomRaw(remote.shoppingCustom ?? []);
+      lastLocalChangeRef.current = remote.updatedAt;
+    },
+    [setLogs, setProfileRaw, setShoppingChecked, setShoppingCustomRaw]
+  );
+
+  // Al vincular un PIN (o al abrir la app con uno ya guardado), se trae una
+  // sola vez el último estado guardado desde el otro dispositivo.
+  useEffect(() => {
+    if (!syncPin || pulledOnceRef.current) return;
+    pulledOnceRef.current = true;
+    setSyncStatus("syncing");
+    pullRemote(syncPin)
+      .then((remote) => {
+        if (remote) aplicarRemoto(remote);
+        setSyncStatus("ok");
+        setLastSyncAt(Date.now());
+      })
+      .catch((e) => {
+        setSyncStatus("error");
+        setSyncError(e instanceof Error ? e.message : "Error de sincronización");
+      });
+  }, [syncPin, aplicarRemoto]);
+
+  // Cualquier cambio local (comidas marcadas, peso, ejercicios, perfil,
+  // compra) se sube con un pequeño retraso, salvo que el cambio venga de
+  // haber aplicado justo un estado remoto (para no reenviarlo sin sentido).
+  useEffect(() => {
+    if (!syncPin) return;
+    if (suppressPushRef.current) {
+      suppressPushRef.current = false;
+      return;
+    }
+    const t = setTimeout(() => {
+      const updatedAt = Date.now();
+      setSyncStatus("syncing");
+      pushRemote(syncPin, { logs, profile, shoppingChecked, shoppingCustom, updatedAt })
+        .then(() => {
+          lastLocalChangeRef.current = updatedAt;
+          setSyncStatus("ok");
+          setLastSyncAt(Date.now());
+        })
+        .catch((e) => {
+          setSyncStatus("error");
+          setSyncError(e instanceof Error ? e.message : "Error de sincronización");
+        });
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [syncPin, logs, profile, shoppingChecked, shoppingCustom]);
+
+  const syncNow = useCallback(async () => {
+    if (!syncPin) return;
+    setSyncStatus("syncing");
+    setSyncError("");
+    try {
+      const remote = await pullRemote(syncPin);
+      if (remote && remote.updatedAt > lastLocalChangeRef.current) {
+        aplicarRemoto(remote);
+      } else {
+        const updatedAt = Date.now();
+        await pushRemote(syncPin, { logs, profile, shoppingChecked, shoppingCustom, updatedAt });
+        lastLocalChangeRef.current = updatedAt;
+      }
+      setSyncStatus("ok");
+      setLastSyncAt(Date.now());
+    } catch (e) {
+      setSyncStatus("error");
+      setSyncError(e instanceof Error ? e.message : "Error de sincronización");
+    }
+  }, [syncPin, logs, profile, shoppingChecked, shoppingCustom, aplicarRemoto]);
 
   const dayKey = date ? dayOfWeekKey(date) : "lunes";
   const dayPlan = useMemo(() => MEAL_PLAN.find((d) => d.day === dayKey)!, [dayKey]);
@@ -116,7 +202,18 @@ export default function DietaApp() {
       {tab === "recetas" && <RecetasTab />}
       {tab === "suplementos" && <SuplementosTab />}
       {tab === "perfil" && (
-        <PerfilTab profile={profile} setProfile={setProfile} targets={targets} logs={logs} />
+        <PerfilTab
+          profile={profile}
+          setProfile={setProfile}
+          targets={targets}
+          logs={logs}
+          syncPin={syncPin}
+          setSyncPin={setSyncPin}
+          syncStatus={syncStatus}
+          syncError={syncError}
+          lastSyncAt={lastSyncAt}
+          syncNow={syncNow}
+        />
       )}
     </div>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Line,
   LineChart,
@@ -15,14 +15,45 @@ import { Profile, DailyLog, DAY_KEYS, DAY_LABELS } from "../types";
 import { Targets } from "../calc";
 import { Card, SectionTitle } from "../ui";
 
+type SyncStatus = "idle" | "syncing" | "ok" | "error";
+
 interface Props {
   profile: Profile;
   setProfile: (updater: (prev: Profile) => Profile) => void;
   targets: Targets;
   logs: Record<string, DailyLog>;
+  syncPin: string;
+  setSyncPin: (pin: string) => void;
+  syncStatus: SyncStatus;
+  syncError: string;
+  lastSyncAt: number | null;
+  syncNow: () => void;
 }
 
-export default function PerfilTab({ profile, setProfile, targets, logs }: Props) {
+function hace(ms: number): string {
+  const s = Math.round((Date.now() - ms) / 1000);
+  if (s < 10) return "hace un momento";
+  if (s < 60) return `hace ${s}s`;
+  const m = Math.round(s / 60);
+  if (m < 60) return `hace ${m} min`;
+  const h = Math.round(m / 60);
+  return `hace ${h}h`;
+}
+
+export default function PerfilTab({
+  profile,
+  setProfile,
+  targets,
+  logs,
+  syncPin,
+  setSyncPin,
+  syncStatus,
+  syncError,
+  lastSyncAt,
+  syncNow,
+}: Props) {
+  const [pinInput, setPinInput] = useState(syncPin);
+
   const pesoData = useMemo(() => {
     return Object.entries(logs)
       .filter(([, log]) => typeof log.pesoCorporal === "number")
@@ -40,6 +71,58 @@ export default function PerfilTab({ profile, setProfile, targets, logs }: Props)
 
   return (
     <div className="space-y-5">
+      <Card>
+        <SectionTitle>🔗 Sincronizar entre dispositivos</SectionTitle>
+        {!syncPin ? (
+          <>
+            <p className="text-xs text-slate-400">
+              Por defecto tus datos solo viven en este dispositivo. Pon el mismo código en el
+              móvil y en el ordenador para que ambos vean los mismos datos.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <input
+                type="password"
+                value={pinInput}
+                onChange={(e) => setPinInput(e.target.value)}
+                placeholder="Código para vincular"
+                className="min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+              />
+              <button
+                onClick={() => setSyncPin(pinInput.trim())}
+                disabled={!pinInput.trim()}
+                className="btn-brand shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium disabled:opacity-40"
+              >
+                Vincular
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-slate-300">
+                {syncStatus === "syncing" && "⏳ Sincronizando…"}
+                {syncStatus === "ok" && lastSyncAt !== null && `✅ Sincronizado ${hace(lastSyncAt)}`}
+                {syncStatus === "ok" && lastSyncAt === null && "✅ Sincronizado"}
+                {syncStatus === "error" && `⚠️ ${syncError || "Error de sincronización"}`}
+                {syncStatus === "idle" && "Vinculado"}
+              </span>
+              <button onClick={syncNow} className="text-lime-300 hover:text-lime-200">
+                Sincronizar ahora
+              </button>
+            </div>
+            <button
+              onClick={() => {
+                setPinInput("");
+                setSyncPin("");
+              }}
+              className="mt-2 text-xs text-slate-500 hover:text-slate-300"
+            >
+              Desvincular este dispositivo
+            </button>
+          </>
+        )}
+      </Card>
+
       <Card>
         <SectionTitle>Tu perfil</SectionTitle>
         <div className="grid grid-cols-2 gap-3">
