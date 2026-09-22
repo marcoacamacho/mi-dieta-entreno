@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DayPlan, WorkoutDay, DailyLog, ExtraFood, DayKey, DAY_LABELS } from "../types";
 import { formatDisplayDate, addDays, dayOfWeekKey, diasHastaProximo } from "../dateUtils";
 import { Card, SectionTitle, ProgressBar, Badge, Confetti, CollapsibleHeader, CollapsibleBody, CircularProgress } from "../ui";
 import { MOMENTO_INFO, MEAL_PLAN, momentoDesdeHora, HORA_DESAYUNO, HORA_COMIDA } from "../planData";
+import { FOOD_DATABASE } from "../foodDatabase";
 import { youtubeSearchUrl } from "../youtube";
 import { useCountUp } from "../useCountUp";
 import { Targets } from "../calc";
@@ -61,11 +62,21 @@ function ultimaVez(logs: Record<string, DailyLog>, exId: string, hoy: string) {
 
 export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, updateLog, targets, diaPesaje }: Props) {
   const [extraNombre, setExtraNombre] = useState("");
+  const [extraGramos, setExtraGramos] = useState("");
   const [extraKcal, setExtraKcal] = useState("");
   const [extraProt, setExtraProt] = useState("");
   const [extraHora, setExtraHora] = useState(() => new Date().toTimeString().slice(0, 5));
   const [entrenoAbierto, setEntrenoAbierto] = useState(true);
   const [menuAbierto, setMenuAbierto] = useState(true);
+
+  const alimentoCoincidente = useMemo(
+    () => FOOD_DATABASE.find((f) => f.nombre.toLowerCase() === extraNombre.trim().toLowerCase()),
+    [extraNombre]
+  );
+  const gramos = Number(extraGramos) || 0;
+  const kcalCalculado = alimentoCoincidente && gramos > 0 ? Math.round((alimentoCoincidente.kcalPor100g * gramos) / 100) : null;
+  const protCalculado =
+    alimentoCoincidente && gramos > 0 ? Math.round((alimentoCoincidente.proteinaPor100g * gramos) / 100) : null;
 
   const dayKey = dayOfWeekKey(date);
   const diasParaPesaje = diasHastaProximo(dayKey, diaPesaje);
@@ -102,8 +113,8 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
   }
 
   function addExtra() {
-    const kcal = Number(extraKcal);
-    const proteina = Number(extraProt) || 0;
+    const kcal = kcalCalculado ?? Number(extraKcal);
+    const proteina = protCalculado ?? (Number(extraProt) || 0);
     if (!extraNombre.trim() || !kcal) return;
     const nueva: ExtraFood = {
       id: `${Date.now()}`,
@@ -115,6 +126,7 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
     };
     updateLog((prev) => ({ ...prev, extras: [...prev.extras, nueva] }));
     setExtraNombre("");
+    setExtraGramos("");
     setExtraKcal("");
     setExtraProt("");
   }
@@ -350,8 +362,14 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
             value={extraNombre}
             onChange={(e) => setExtraNombre(e.target.value)}
             placeholder="Qué has comido"
+            list="alimentos-conocidos"
             className="w-full min-w-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
           />
+          <datalist id="alimentos-conocidos">
+            {FOOD_DATABASE.map((f) => (
+              <option key={f.nombre} value={f.nombre} />
+            ))}
+          </datalist>
           <div className="flex gap-2">
             <input
               value={extraHora}
@@ -359,21 +377,41 @@ export default function HoyTab({ date, setDate, dayPlan, workoutDay, log, logs, 
               type="time"
               className="w-[6.5rem] shrink-0 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
             />
-            <input
-              value={extraKcal}
-              onChange={(e) => setExtraKcal(e.target.value)}
-              type="number"
-              placeholder="kcal"
-              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
-            />
-            <input
-              value={extraProt}
-              onChange={(e) => setExtraProt(e.target.value)}
-              type="number"
-              placeholder="prot g"
-              className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
-            />
+            {alimentoCoincidente ? (
+              <input
+                value={extraGramos}
+                onChange={(e) => setExtraGramos(e.target.value)}
+                type="number"
+                placeholder="gramos"
+                autoFocus
+                className="w-0 min-w-0 flex-1 rounded-lg border border-lime-400/40 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+              />
+            ) : (
+              <>
+                <input
+                  value={extraKcal}
+                  onChange={(e) => setExtraKcal(e.target.value)}
+                  type="number"
+                  placeholder="kcal"
+                  className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+                />
+                <input
+                  value={extraProt}
+                  onChange={(e) => setExtraProt(e.target.value)}
+                  type="number"
+                  placeholder="prot g"
+                  className="w-0 min-w-0 flex-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-white outline-none focus:border-lime-400"
+                />
+              </>
+            )}
           </div>
+          {alimentoCoincidente && (
+            <p className="text-xs text-lime-300">
+              🔎 {alimentoCoincidente.nombre}: {alimentoCoincidente.kcalPor100g} kcal / {alimentoCoincidente.proteinaPor100g}g
+              proteína por 100g
+              {gramos > 0 && ` → ${kcalCalculado} kcal · ${protCalculado}g proteína calculado`}
+            </p>
+          )}
           {extraHora && (
             <p className="text-xs text-slate-500">
               {MOMENTO_INFO[momentoDesdeHora(extraHora)].emoji} Se contará como{" "}
